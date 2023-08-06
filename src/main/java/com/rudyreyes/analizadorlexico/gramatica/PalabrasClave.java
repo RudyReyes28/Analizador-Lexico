@@ -48,6 +48,7 @@ public class PalabrasClave {
         palabrasReservadas.add("while");
         palabrasReservadas.add("with");
         palabrasReservadas.add("yield");
+        palabrasReservadas.add("range");
     }
     
     

@@ -26,8 +26,11 @@ public class Prueba {
 "# Función para saludar\n" +
 "def saludar(nombre):\n" +
 "\n"+
-"x = 5\n" +
+"x // 5\n" +
 "y = 10.5\n" +
+"z += 10.5\n" +
+"j == 10.5\n" +
+"exp ** 10.5\n" +                
 "nombre = \"Juan\"\n" +
 "es_valido = True\n" +
 "\n" +

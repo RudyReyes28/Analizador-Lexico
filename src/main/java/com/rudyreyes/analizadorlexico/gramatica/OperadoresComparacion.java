@@ -11,7 +11,7 @@ import java.util.HashSet;
  * @author rudyo
  */
 public class OperadoresComparacion {
-    private final String nombreToken = "OperadorAritmetico";
+    private final String nombreToken = "OperadorComparacion";
     
     // Crear un conjunto para almacenar los operadores de comparacion
     HashSet<String> operadoresComparacion = new HashSet<>();

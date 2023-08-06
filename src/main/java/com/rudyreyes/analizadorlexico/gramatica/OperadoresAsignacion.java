@@ -23,7 +23,6 @@ public class OperadoresAsignacion {
         operadoresAsignacion.add("-=");
         operadoresAsignacion.add("*=");
         operadoresAsignacion.add("/=");
-        operadoresAsignacion.add("//=");
         operadoresAsignacion.add("%=");
         
     }

@@ -19,21 +19,22 @@ import java.util.List;
 
 public class AnalizadorLexico {
     
-    
-    
+    //DEFINIMOS LA GRAMATICA
+    private static final Identificadores identificador = new Identificadores();
+    private static final Comentarios comentarios = new Comentarios();
+    private static final Constantes constantes = new Constantes();
+    private static final OperadoresAritmeticos aritmeticos = new OperadoresAritmeticos();
+    private static final OperadoresAsignacion asignacion = new OperadoresAsignacion();
+    private static final OperadoresComparacion comparacion = new OperadoresComparacion();
+    private static final OperadoresLogicos logicos = new OperadoresLogicos();
+    private static final OtrosSimbolos otros = new OtrosSimbolos();
+    private static final PalabrasClave reservadas = new PalabrasClave();
+
+
     
     
      public static List<Token> analizador(String codigoFuente) {
-         //DEFINIMOS LA GRAMATICA
-         Identificadores identificador = new Identificadores();
-         Comentarios comentarios = new Comentarios();
-         Constantes constantes = new Constantes();
-         OperadoresAritmeticos aritmeticos = new OperadoresAritmeticos();
-         OperadoresAsignacion asignacion = new OperadoresAsignacion();
-         OperadoresComparacion comparacion = new OperadoresComparacion();
-         OperadoresLogicos logicos = new OperadoresLogicos();
-         OtrosSimbolos otros = new OtrosSimbolos();
-         PalabrasClave reservadas = new PalabrasClave();
+         
          List<Token> tokens = new ArrayList<>();
          
         int linea = 1;
@@ -43,11 +44,15 @@ public class AnalizadorLexico {
         // Definir los estados
         final int ESTADO_INICIAL = 0;
         final int ESTADO_LEYENDO_IDENTIFICADOR = 1;
+        final int ESTADO_COMENTARIO = 2;
+        final int ESTADO_ARITMETICO= 3;
+        final int ESTADO_ASIGNACION = 4;
 
         int estadoActual = ESTADO_INICIAL;
 
         // Recorrer el código fuente caracter por caracter
-        for (char caracter : codigoFuente.toCharArray()) {
+        for (int i = 0; i < codigoFuente.length(); i++) {
+            char caracter = codigoFuente.charAt(i);
             switch (estadoActual) {
                 case ESTADO_INICIAL:
                     if (Character.isLetter(caracter) || caracter == '_') {
@@ -58,7 +63,36 @@ public class AnalizadorLexico {
                         // Nueva línea, actualizar posición
                         linea++;
                         columna = 1;
-                    } else if (!Character.isWhitespace(caracter)) {
+                    
+                    } else if (comentarios.verificandoPalabra(Character.toString(caracter))) {
+                        //SI LA LINEA EMPIEZA CON UN # ES UN COMENTARIO
+                        lexema.append(caracter);
+                        estadoActual = ESTADO_COMENTARIO;
+                    
+                    }else if (aritmeticos.verificandoPalabra(Character.toString(caracter)) && codigoFuente.charAt(i+1) != '=') {
+                        //SI LA LINEA EMPIEZA CON UN ARITMETICO
+                        lexema.append(caracter);
+                        if(codigoFuente.charAt(i+1) == '*' || codigoFuente.charAt(i+1) == '/' ){
+                            estadoActual = ESTADO_ARITMETICO;
+                        }else{
+                            tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                        }
+                        
+                    }else if ((aritmeticos.verificandoPalabra(Character.toString(caracter)) && codigoFuente.charAt(i+1) == '=')
+                            || (caracter == '=' && codigoFuente.charAt(i+1) != '=')) {
+                        //SI LA LINEA EMPIEZA CON UNA ASIGNACION O ARITMETICO
+                        lexema.append(caracter);
+                        if(aritmeticos.verificandoPalabra(Character.toString(caracter))){
+                            estadoActual = ESTADO_ASIGNACION;
+                        }else{
+                            tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                        }
+                        
+                    }else if (!Character.isWhitespace(caracter)) {
                         // Caracter inválido, generar error o ignorar
                     }
                     break;
@@ -68,11 +102,53 @@ public class AnalizadorLexico {
                         lexema.append(caracter);
                     } else {
                         // Final del identificador, generar token
-                        tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
+                        
+                        if(isOperadorLogico(lexema.toString())){
+                            tokens.add(new Token(logicos.getNombreToken(), lexema.toString(), linea, columna));
+                        
+                        }else if(isPalabraReservada(lexema.toString())){
+                            tokens.add(new Token(reservadas.getNombreToken(), lexema.toString(), linea, columna));
+                        
+                        }else if(isConstanteBooleana(lexema.toString())){
+                            tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
+                        }else{
+                        
+                            tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
+                        }
                         lexema.setLength(0); // Reiniciar el lexema
                         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                     }
                     break;
+                    
+                case ESTADO_COMENTARIO:
+                    if(caracter != '\n'){
+                        lexema.append(caracter);
+                    }else{
+                        tokens.add(new Token(comentarios.getNombreToken(), lexema.toString(), linea, columna));
+                        linea++;
+                        columna = 1;
+                        lexema.setLength(0); // Reiniciar el lexema
+                        estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                    }
+                    
+                    break;
+                    
+                case ESTADO_ARITMETICO:
+                        lexema.append(caracter);
+                        tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+                        lexema.setLength(0); // Reiniciar el lexema
+                        estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                    
+                    break;
+                    
+                case ESTADO_ASIGNACION:
+                    lexema.append(caracter);
+                    tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+                    lexema.setLength(0); // Reiniciar el lexema
+                    estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+
+                    break;
+                    
                 default:
                     // Estado inválido, generar error o manejar de acuerdo a tus necesidades
             }
@@ -81,6 +157,7 @@ public class AnalizadorLexico {
             if (caracter != '\n') {
                 columna++;
             }
+            
         }
 
         // Comprobar si hay un identificador sin finalizar al final del código fuente
@@ -90,5 +167,57 @@ public class AnalizadorLexico {
          
          return tokens;
      }
+     
+     //CREAR UN METODO PARA VERIFICAR SI ES UN OPERADOR LOGICO/ PALABRA RESERVADA/ O CONSTANTE BOOLEANA
+     
+     //VERIFICANDO OPERADOR LOGICO
+     private static boolean isOperadorLogico(String lexema){
+         return logicos.verificandoPalabra(lexema);
+     }
+     
+     //VERIFICANDO PALABRA RESERVADA
+     private static boolean isPalabraReservada(String lexema){
+         return reservadas.verificandoPalabra(lexema);
+     }
+     
+     //VERIFICANDO CONSTANTE BOOLEANA
+     private static boolean isConstanteBooleana(String lexema){
+         return constantes.verificandoPalabra(lexema);
+         
+     }
     
+     /*
+     if(aritmeticos.verificandoPalabra(Character.toString(caracter)) && !lexema.equals("=") ){
+                        //EN ESTE SE GUARDARAN LOS ARITMETICOS DOBLES
+                        if(lexema.length()<2){
+                            lexema.append(caracter);
+                            tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                        }
+                    
+                    }else if(asignacion.verificandoPalabra(Character.toString(caracter)) && !lexema.equals("=") ){
+                        //VERIFICANDO COMBINACION ASIGNACION
+                        if(lexema.length()<2){
+                            lexema.append(caracter);
+                            tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                        }
+                    }else if(lexema.equals("=") && caracter!= '='){
+                        tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                    
+                    }else if(caracter == '='){
+                        lexema.append(caracter);
+                        tokens.add(new Token(comparacion.getNombreToken(), lexema.toString(), linea, columna));
+                        lexema.setLength(0); // Reiniciar el lexema
+                        estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                    }else{
+                        tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+                        lexema.setLength(0); // Reiniciar el lexema
+                        lexema.append(caracter);
+                        estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                    }*/
 }
