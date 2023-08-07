@@ -18,7 +18,9 @@ public class OperadoresComparacion {
 
     public OperadoresComparacion() {
         operadoresComparacion.add("==");
+        operadoresComparacion.add("=");
         operadoresComparacion.add("!=");
+        operadoresComparacion.add("!");
         operadoresComparacion.add(">");
         operadoresComparacion.add("<");
         operadoresComparacion.add(">=");

@@ -15,7 +15,7 @@ public class Prueba {
 
     public static void main(String args[]) {
         
-        String codigoFuente = "def factorial(numero):\n" +
+        String codigoFuente = "def factorial (numero):\n" +
 "    resultado = 1\n" +
 "\n" +
 "    for i in range(1, numero + 1):\n" +
@@ -31,8 +31,8 @@ public class Prueba {
 "z += 10.5\n" +
 "j == 10.5\n" +
 "exp ** 10.5\n" +                
-"nombre = \"Juan\"\n" +
-"es_valido = True\n" +
+"nombre='Juan'\n" +
+"es_valido =True\n" +
 "\n" +
 "resultado_factorial = factorial(x)\n" +
 "saludar(nombre)\n" +
