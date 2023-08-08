@@ -20,36 +20,41 @@ import java.util.List;
 public class AnalizadorLexico {
     
     //DEFINIMOS LA GRAMATICA
-    private static final Identificadores identificador = new Identificadores();
-    private static final Comentarios comentarios = new Comentarios();
-    private static final Constantes constantes = new Constantes();
-    private static final OperadoresAritmeticos aritmeticos = new OperadoresAritmeticos();
-    private static final OperadoresAsignacion asignacion = new OperadoresAsignacion();
-    private static final OperadoresComparacion comparacion = new OperadoresComparacion();
-    private static final OperadoresLogicos logicos = new OperadoresLogicos();
-    private static final OtrosSimbolos otros = new OtrosSimbolos();
-    private static final PalabrasClave reservadas = new PalabrasClave();
+    private final Identificadores identificador = new Identificadores();
+    private final Comentarios comentarios = new Comentarios();
+    private final Constantes constantes = new Constantes();
+    private final OperadoresAritmeticos aritmeticos = new OperadoresAritmeticos();
+    private final OperadoresAsignacion asignacion = new OperadoresAsignacion();
+    private final OperadoresComparacion comparacion = new OperadoresComparacion();
+    private final OperadoresLogicos logicos = new OperadoresLogicos();
+    private final OtrosSimbolos otros = new OtrosSimbolos();
+    private final PalabrasClave reservadas = new PalabrasClave();
 
 
     // Definir los estados
-        final static int ESTADO_INICIAL = 0;
-        final static int ESTADO_LEYENDO_IDENTIFICADOR = 1;
-        final static int ESTADO_COMENTARIO = 2;
-        final static int ESTADO_ARITMETICO= 3;
-        final static int ESTADO_ASIGNACION = 4;
-        final static int ESTADO_COMPARACION = 5;
-        final static int ESTADO_NUMEROS = 6;
-        final static int ESTADO_CADENAS = 7;
+        final private int ESTADO_INICIAL = 0;
+        final private  int ESTADO_LEYENDO_IDENTIFICADOR = 1;
+        final private int ESTADO_COMENTARIO = 2;
+        final private int ESTADO_ARITMETICO= 3;
+        final private int ESTADO_ASIGNACION = 4;
+        final private int ESTADO_COMPARACION = 5;
+        final private int ESTADO_NUMEROS = 6;
+        final private int ESTADO_CADENAS = 7;
         
-        static int estadoActual = ESTADO_INICIAL;
+        private int estadoActual = ESTADO_INICIAL;
     
-        static List<Token> tokens = new ArrayList<>();
+        private List<Token> tokens = new ArrayList<>();
          
-        static int linea = 1;
-        static int columna = 1;
-        static StringBuilder lexema = new StringBuilder();
+        private  int linea = 1;
+        private int columna = 1;
+        private StringBuilder lexema = new StringBuilder();
+
+    public AnalizadorLexico() {
+    }
+        
+        
     
-     public static List<Token> analizador(String codigoFuente) {
+     public List<Token> analizador(String codigoFuente) {
          
 
         // Recorrer el código fuente caracter por caracter
@@ -197,7 +202,7 @@ public class AnalizadorLexico {
      }
      
 
-     private static void leyendoIdentificador(char caracter, int i, String codigoFuente) {
+     private void leyendoIdentificador(char caracter, int i, String codigoFuente) {
         if (Character.isLetterOrDigit(caracter) || caracter == '_') {
             // Continuar leyendo el identificador
             lexema.append(caracter);
@@ -239,7 +244,7 @@ public class AnalizadorLexico {
         }
      }
      
-     private static void leyendoComentarios(char caracter, int i){
+     private void leyendoComentarios(char caracter, int i){
          if (caracter != '\n') {
              lexema.append(caracter);
          } else {
@@ -251,28 +256,28 @@ public class AnalizadorLexico {
          }
      }
      
-     private static void leyendoAritmeticos(char caracter, int i){
+     private void leyendoAritmeticos(char caracter, int i){
          lexema.append(caracter);
         tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL;
     }
      
-     private static void leyendoAsignacion(char caracter, int i){
+     private void leyendoAsignacion(char caracter, int i){
          lexema.append(caracter);
         tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
      
-     private static void leyendoComparacion(char caracter, int i){
+     private void leyendoComparacion(char caracter, int i){
         lexema.append(caracter);
         tokens.add(new Token(comparacion.getNombreToken(), lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
      
-     private static void leyendoNumeros(char caracter, int i){
+     private void leyendoNumeros(char caracter, int i){
          if (Character.isDigit(caracter) || caracter == '.') {
              lexema.append(caracter);
          } else {
@@ -282,7 +287,7 @@ public class AnalizadorLexico {
          }
      }
      
-     private static void leyendoCadenas(char caracter, int i){
+     private void leyendoCadenas(char caracter, int i){
          if (caracter == '"' || caracter == '\'') {
              lexema.append(caracter);
              tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
@@ -298,17 +303,17 @@ public class AnalizadorLexico {
 //CREAR UN METODO PARA VERIFICAR SI ES UN OPERADOR LOGICO/ PALABRA RESERVADA/ O CONSTANTE BOOLEANA
      
      //VERIFICANDO OPERADOR LOGICO
-     private static boolean isOperadorLogico(String lexema){
+     private boolean isOperadorLogico(String lexema){
          return logicos.verificandoPalabra(lexema);
      }
      
      //VERIFICANDO PALABRA RESERVADA
-     private static boolean isPalabraReservada(String lexema){
+     private boolean isPalabraReservada(String lexema){
          return reservadas.verificandoPalabra(lexema);
      }
      
      //VERIFICANDO CONSTANTE BOOLEANA
-     private static boolean isConstanteBooleana(String lexema){
+     private boolean isConstanteBooleana(String lexema){
          return constantes.verificandoPalabra(lexema);
          
      }

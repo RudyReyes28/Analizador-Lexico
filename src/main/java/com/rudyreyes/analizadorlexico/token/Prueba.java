@@ -39,7 +39,9 @@ public class Prueba {
 "\n" +
 "# Condicionales\n" +
 "if es_valido:";
-        List<Token> tokens = AnalizadorLexico.analizador(codigoFuente);
+        
+        AnalizadorLexico analizador = new AnalizadorLexico();
+        List<Token> tokens =analizador.analizador(codigoFuente);
 
         for (Token token : tokens) {
             System.out.println("Tipo: " + token.getTipo() + ", Lexema: " + token.getValor()+

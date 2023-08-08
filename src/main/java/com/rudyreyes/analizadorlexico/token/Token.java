@@ -54,6 +54,9 @@ public class Token {
         this.columna = columna;
     }
     
-    
+    public String obtenerToken(){
+        return "Tipo: " + this.getTipo() + ", Lexema: " + this.getValor()+
+                    ", Linea: " + this.getLinea() + ", Columna: " + this.getColumna();
+    }
     
 }
