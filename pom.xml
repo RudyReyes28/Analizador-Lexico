@@ -11,4 +11,20 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>com.rudyreyes.analizadorlexico.token.Prueba</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>guru.nidi</groupId>
+            <artifactId>graphviz-java</artifactId>
+            <version>0.18.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+    </dependencies>
+    
+    
 </project>
