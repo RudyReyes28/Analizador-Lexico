@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -35,7 +36,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     /**
      * Creates new form VentanaAnalizador
      */
-    NumeroLinea numeroLinea;
+    private NumeroLinea numeroLinea;
+    private List<Token> tokens;
 
     public VentanaAnalizador() {
         initComponents();
@@ -63,7 +65,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         codigoArea = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         tokenArea = new javax.swing.JTextArea();
-        imagenGrafico = new javax.swing.JLabel();
+        reportesBoton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Analilzador Lexico");
@@ -98,30 +100,37 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         tokenArea.setRows(5);
         jScrollPane1.setViewportView(tokenArea);
 
-        imagenGrafico.setText("jLabel1");
+        reportesBoton.setText("Reportes");
+        reportesBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportesBotonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(subirArchivo)
-                .addGap(30, 30, 30)
-                .addComponent(generarGrafico)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addGap(18, 18, 18)
-                        .addComponent(ejecutarCodigo))
+                        .addComponent(subirArchivo)
+                        .addGap(47, 47, 47)
+                        .addComponent(reportesBoton)
+                        .addGap(48, 48, 48)
+                        .addComponent(generarGrafico)
+                        .addContainerGap(255, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(imagenGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)))
-                .addGap(15, 15, 15))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane2)
+                                .addGap(18, 18, 18)
+                                .addComponent(ejecutarCodigo))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(15, 15, 15))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,7 +138,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subirArchivo)
-                    .addComponent(generarGrafico))
+                    .addComponent(generarGrafico)
+                    .addComponent(reportesBoton))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
@@ -137,15 +147,9 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                        .addComponent(imagenGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(108, 108, 108))))
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -202,7 +206,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void ejecutarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCodigoActionPerformed
         String codigoFuente = codigoArea.getText();
         AnalizadorLexico analisis = new AnalizadorLexico();
-        List<Token> tokens =analisis.analizador(codigoFuente);
+        tokens =analisis.analizador(codigoFuente);
         
         tokenArea.setText("");
         
@@ -213,7 +217,15 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
     private void generarGraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarGraficoActionPerformed
        
-         String inputString = "hola"; // Tu string aquí
+        if(tokens != null && !tokens.isEmpty() ){
+            VentanaGraficos ventanaGraficos = new VentanaGraficos(this, true, tokens);
+            ventanaGraficos.setLocationRelativeTo(this);
+            ventanaGraficos.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Aun no se han generado tokens");
+        }
+        
+         /*String inputString = "hola"; // Tu string aquí
 
             MutableGraph g = guru.nidi.graphviz.model.Factory.mutGraph("stringToNode")
                     .setDirected(true)
@@ -247,8 +259,18 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             imagenGrafico.setIcon(imageIcon);
         } catch (IOException ex) {
             Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }//GEN-LAST:event_generarGraficoActionPerformed
+
+    private void reportesBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesBotonActionPerformed
+        if(tokens != null && !tokens.isEmpty() ){
+            VentanaReportes ventanaReportes = new VentanaReportes(this, true, tokens);
+            ventanaReportes.setLocationRelativeTo(this);
+            ventanaReportes.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Aun no se han generado tokens");
+        }
+    }//GEN-LAST:event_reportesBotonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -289,10 +311,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private javax.swing.JTextArea codigoArea;
     private javax.swing.JButton ejecutarCodigo;
     private javax.swing.JButton generarGrafico;
-    private javax.swing.JLabel imagenGrafico;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton reportesBoton;
     private javax.swing.JButton subirArchivo;
     private javax.swing.JTextArea tokenArea;
     // End of variables declaration//GEN-END:variables
