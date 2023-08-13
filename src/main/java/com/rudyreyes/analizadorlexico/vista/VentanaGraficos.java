@@ -102,6 +102,7 @@ public class VentanaGraficos extends javax.swing.JDialog {
         arbolToken = new javax.swing.JTree();
         imagenGrafico = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        infoToken = new javax.swing.JLabel();
 
         jMenu1.setText("jMenu1");
 
@@ -146,25 +147,31 @@ public class VentanaGraficos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                        .addComponent(imagenGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(imagenGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(infoToken, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jLabel1))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(imagenGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(infoToken, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(imagenGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))))
         );
 
         pack();
@@ -214,6 +221,8 @@ public class VentanaGraficos extends javax.swing.JDialog {
 
                 ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
 
+                llenarInformacionToken(lexema);
+                
                 imagenGrafico.setIcon(scaledImageIcon);
                 //ImageIcon imageIcon = new ImageIcon(imageBytes);
 
@@ -224,10 +233,21 @@ public class VentanaGraficos extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_arbolTokenValueChanged
 
+    private void llenarInformacionToken(String lexema){
+        String informacion = "<html>";
+        for (Token token : tokens) {
+            if (token.getValor().equals(lexema)) {
+                informacion += "Tipo: " + token.getTipo() + "   Linea: " + token.getLinea() + "     Columna: " + token.getColumna() + "<br>";
+            }
+        }
+        informacion += "</html>";
 
+        infoToken.setText(informacion);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTree arbolToken;
     private javax.swing.JLabel imagenGrafico;
+    private javax.swing.JLabel infoToken;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;

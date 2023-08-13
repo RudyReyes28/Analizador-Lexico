@@ -26,14 +26,39 @@ public class VentanaReportes extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) tablaReportes.getModel();
         for (Token token : tokens) {
             model.addRow(new Object[]{
-                token.getTipo(),
-                "patron",
-                token.getValor(),
-                token.getLinea(),
-                token.getColumna()
+                colorearToken(token.getTipo(), token.getTipo()),
+                colorearToken(token.getTipo(), token.getPatron()),
+                colorearToken(token.getTipo(), token.getValor()),
+                colorearToken(token.getTipo(), token.getLinea()+""),
+                colorearToken(token.getTipo(), token.getColumna()+"")
             });
         }
     }
+    
+    private String colorearToken(String tipo, String palabra){
+        if(tipo.equals("Identificador")){
+            return "<html><font color='black'>"+palabra+"</font></html>";
+        
+        }else if (tipo.equals("OperadorAsignacion") || tipo.equals("OperadorLogico") 
+                || tipo.equals("OperadorComparacion") ||  tipo.equals("OperadorAritmetico") ){
+            return "<html><font color='#00BFFF'>"+palabra+"</font></html>";
+        
+        
+        }else if(tipo.equals("PalabraClave")){
+            return "<html><font color='#800080'>"+palabra+"</font></html>";
+        
+        }else if(tipo.equals("Constante")){
+            return "<html><font color='red'>"+palabra+"</font></html>";
+        
+        }else if(tipo.equals("Comentario")){
+            return "<html><font color='#C0C0C0'>"+palabra+"</font></html>";
+        
+        }else {
+            return "<html><font color='green'>"+palabra+"</font></html>";
+        }
+        
+    }
+            
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,12 +95,12 @@ public class VentanaReportes extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(237, 237, 237)
-                        .addComponent(etiquetaTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                        .addComponent(etiquetaTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -11,6 +11,7 @@ package com.rudyreyes.analizadorlexico.token;
 public class Token {
     
     private String tipo;
+    private String patron;
     private String valor;
     private int linea;
     private int columna;
@@ -21,6 +22,16 @@ public class Token {
         this.linea = linea;
         this.columna = columna;
     }
+
+    public Token(String tipo, String patron, String valor, int linea, int columna) {
+        this.tipo = tipo;
+        this.patron = patron;
+        this.valor = valor;
+        this.linea = linea;
+        this.columna = columna;
+    }
+    
+    
 
     public String getTipo() {
         return tipo;
@@ -58,5 +69,11 @@ public class Token {
         return "Tipo: " + this.getTipo() + ", Lexema: " + this.getValor()+
                     ", Linea: " + this.getLinea() + ", Columna: " + this.getColumna();
     }
+
+    public String getPatron() {
+        return patron;
+    }
+    
+    
     
 }

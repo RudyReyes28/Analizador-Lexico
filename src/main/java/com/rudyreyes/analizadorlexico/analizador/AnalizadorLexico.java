@@ -68,7 +68,7 @@ public class AnalizadorLexico {
                         if(Character.isLetter(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1) == '_'){
                             estadoActual = ESTADO_LEYENDO_IDENTIFICADOR;
                         }else{
-                            tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
+                            tokens.add(new Token(identificador.getNombreToken(), "[a-zA-Z_][a-zA-Z0-9_]*", lexema.toString(), linea, columna));
                             lexema.setLength(0); // Reiniciar el lexema
                             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         }
@@ -89,7 +89,7 @@ public class AnalizadorLexico {
                         if(codigoFuente.charAt(i+1) == '*' || codigoFuente.charAt(i+1) == '/' ){
                             estadoActual = ESTADO_ARITMETICO;
                         }else{
-                            tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+                            tokens.add(new Token(aritmeticos.getNombreToken(),"[+-*/%]", lexema.toString(), linea, columna));
                             lexema.setLength(0); // Reiniciar el lexema
                             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         }
@@ -101,7 +101,7 @@ public class AnalizadorLexico {
                         if(aritmeticos.verificandoPalabra(Character.toString(caracter))){
                             estadoActual = ESTADO_ASIGNACION;
                         }else{
-                            tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+                            tokens.add(new Token(asignacion.getNombreToken(),"[=]", lexema.toString(), linea, columna));
                             lexema.setLength(0); // Reiniciar el lexema
                             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         }
@@ -112,7 +112,7 @@ public class AnalizadorLexico {
                         if(comparacion.verificandoPalabra(Character.toString(caracter)) && codigoFuente.charAt(i+1) == '='){
                             estadoActual = ESTADO_COMPARACION;
                         }else{
-                            tokens.add(new Token(comparacion.getNombreToken(), lexema.toString(), linea, columna));
+                            tokens.add(new Token(comparacion.getNombreToken(),"[<>]", lexema.toString(), linea, columna));
                             lexema.setLength(0); // Reiniciar el lexema
                             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         }
@@ -124,7 +124,7 @@ public class AnalizadorLexico {
                         if(Character.isDigit(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1)== '.'){
                             estadoActual = ESTADO_NUMEROS;
                         }else{
-                            tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
+                            tokens.add(new Token(constantes.getNombreToken(),"[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
                             lexema.setLength(0); // Reiniciar el lexema
                             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         }
@@ -135,7 +135,7 @@ public class AnalizadorLexico {
                     }else if (otros.verificandoPalabra(Character.toString(caracter))){
                     //Estos seran otros
                         lexema.append(caracter);
-                        tokens.add(new Token(otros.getNombreToken(), lexema.toString(), linea, columna));
+                        tokens.add(new Token(otros.getNombreToken(),"[:;,()[]{}]", lexema.toString(), linea, columna));
                         lexema.setLength(0); // Reiniciar el lexema
                         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         
@@ -208,47 +208,38 @@ public class AnalizadorLexico {
             lexema.append(caracter);
             
             if (!Character.isLetterOrDigit(codigoFuente.charAt(i + 1)) && codigoFuente.charAt(i + 1) != '_') {
-                if (isOperadorLogico(lexema.toString())) {
-                    tokens.add(new Token(logicos.getNombreToken(), lexema.toString(), linea, columna));
-
-                } else if (isPalabraReservada(lexema.toString())) {
-                    tokens.add(new Token(reservadas.getNombreToken(), lexema.toString(), linea, columna));
-
-                } else if (isConstanteBooleana(lexema.toString())) {
-                    tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
-                } else {
-
-                    tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
-                }
-                lexema.setLength(0); // Reiniciar el lexema
-                estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                asignandoTokenIdentificador();
             }
             
         }else {
             // Final del identificador, generar token
 
-            if (isOperadorLogico(lexema.toString())) {
-                tokens.add(new Token(logicos.getNombreToken(), lexema.toString(), linea, columna));
-
-            } else if (isPalabraReservada(lexema.toString())) {
-                tokens.add(new Token(reservadas.getNombreToken(), lexema.toString(), linea, columna));
-
-            } else if (isConstanteBooleana(lexema.toString())) {
-                tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
-            } else {
-
-                tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
-            }
-            lexema.setLength(0); // Reiniciar el lexema
-            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+            asignandoTokenIdentificador();
         }
+     }
+     
+     private void asignandoTokenIdentificador(){
+         if (isOperadorLogico(lexema.toString())) {
+                    tokens.add(new Token(logicos.getNombreToken(), lexema.toString(), lexema.toString(), linea, columna));
+
+                } else if (isPalabraReservada(lexema.toString())) {
+                    tokens.add(new Token(reservadas.getNombreToken(), lexema.toString(), lexema.toString(), linea, columna));
+
+                } else if (isConstanteBooleana(lexema.toString())) {
+                    tokens.add(new Token(constantes.getNombreToken(),lexema.toString(), lexema.toString(), linea, columna));
+                } else {
+
+                    tokens.add(new Token(identificador.getNombreToken(),"[a-zA-Z_][a-zA-Z0-9_]*", lexema.toString(), linea, columna));
+                }
+                lexema.setLength(0); // Reiniciar el lexema
+                estadoActual = ESTADO_INICIAL; // Volver al estado inicial
      }
      
      private void leyendoComentarios(char caracter, int i){
          if (caracter != '\n') {
              lexema.append(caracter);
          } else {
-             tokens.add(new Token(comentarios.getNombreToken(), lexema.toString(), linea, columna));
+             tokens.add(new Token(comentarios.getNombreToken(),"[#][a-zA-Z0-9_]*", lexema.toString(), linea, columna));
              linea++;
              columna = 1;
              lexema.setLength(0); // Reiniciar el lexema
@@ -258,21 +249,21 @@ public class AnalizadorLexico {
      
      private void leyendoAritmeticos(char caracter, int i){
          lexema.append(caracter);
-        tokens.add(new Token(aritmeticos.getNombreToken(), lexema.toString(), linea, columna));
+        tokens.add(new Token(aritmeticos.getNombreToken(),"[+-*/%]", lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL;
     }
      
      private void leyendoAsignacion(char caracter, int i){
          lexema.append(caracter);
-        tokens.add(new Token(asignacion.getNombreToken(), lexema.toString(), linea, columna));
+        tokens.add(new Token(asignacion.getNombreToken(),"[+-*/%][=]", lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
      
      private void leyendoComparacion(char caracter, int i){
         lexema.append(caracter);
-        tokens.add(new Token(comparacion.getNombreToken(), lexema.toString(), linea, columna));
+        tokens.add(new Token(comparacion.getNombreToken(),"[<>!=][=]", lexema.toString(), linea, columna));
         lexema.setLength(0); // Reiniciar el lexema
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
@@ -281,7 +272,7 @@ public class AnalizadorLexico {
          if (Character.isDigit(caracter) || caracter == '.') {
              lexema.append(caracter);
          } else {
-             tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
+             tokens.add(new Token(constantes.getNombreToken(),"[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
              lexema.setLength(0); // Reiniciar el lexema
              estadoActual = ESTADO_INICIAL; // Volver al estado inicial
          }
@@ -290,7 +281,7 @@ public class AnalizadorLexico {
      private void leyendoCadenas(char caracter, int i){
          if (caracter == '"' || caracter == '\'') {
              lexema.append(caracter);
-             tokens.add(new Token(constantes.getNombreToken(), lexema.toString(), linea, columna));
+             tokens.add(new Token(constantes.getNombreToken(),"[\"'][a-zA-Z0-9_*+-#/]*[\"']", lexema.toString(), linea, columna));
              lexema.setLength(0); // Reiniciar el lexema
              estadoActual = ESTADO_INICIAL; // Volver al estado inicial
              
