@@ -40,6 +40,7 @@ public class AnalizadorLexico {
         final private int ESTADO_COMPARACION = 5;
         final private int ESTADO_NUMEROS = 6;
         final private int ESTADO_CADENAS = 7;
+        final private int ESTADO_ERROR = 8;
         
         private int estadoActual = ESTADO_INICIAL;
     
@@ -141,6 +142,15 @@ public class AnalizadorLexico {
                         
                     }else if (!Character.isWhitespace(caracter)) {
                         // Caracter inválido, generar error o ignorar
+                        lexema.append(caracter);
+                        if(Character.isWhitespace(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1)== '\n'){
+                            tokens.add(new Token("Error",lexema.toString(), linea, columna));
+                            lexema.setLength(0); // Reiniciar el lexema
+                            estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                        
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                        }
                     }
                     break;
                 case ESTADO_LEYENDO_IDENTIFICADOR:
@@ -178,8 +188,11 @@ public class AnalizadorLexico {
                     
                     leyendoCadenas(caracter, i);
                     
-                    
                     break; 
+                    
+                case ESTADO_ERROR:
+                    leyendoErrores(caracter, i);
+                    break;
                 default:
                     // Estado inválido, generar error o manejar de acuerdo a tus necesidades
             }
@@ -285,12 +298,26 @@ public class AnalizadorLexico {
              lexema.setLength(0); // Reiniciar el lexema
              estadoActual = ESTADO_INICIAL; // Volver al estado inicial
              
-         } else {
+         }else if(caracter == '\n'){
+             tokens.add(new Token("Error", lexema.toString(), linea, columna));
+             lexema.setLength(0); // Reiniciar el lexema
+             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+         }else  {
              lexema.append(caracter);
              
          }
      }
 
+     private void leyendoErrores(char caracter, int i){
+         if (Character.isWhitespace(caracter) || caracter == '\n') {
+             tokens.add(new Token("Error", lexema.toString(), linea, columna));
+             lexema.setLength(0); // Reiniciar el lexema
+             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+
+         }else{
+             lexema.append(caracter);
+         }
+     }
 //CREAR UN METODO PARA VERIFICAR SI ES UN OPERADOR LOGICO/ PALABRA RESERVADA/ O CONSTANTE BOOLEANA
      
      //VERIFICANDO OPERADOR LOGICO

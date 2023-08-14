@@ -6,23 +6,10 @@ package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.analizador.AnalizadorLexico;
 import com.rudyreyes.analizadorlexico.token.Token;
-import guru.nidi.graphviz.attribute.Label;
-import guru.nidi.graphviz.attribute.Rank;
-import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.model.*;
-
-
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -66,11 +53,16 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tokenArea = new javax.swing.JTextArea();
         reportesBoton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Analilzador Lexico");
         setResizable(false);
 
+        jPanel1.setBackground(new java.awt.Color(153, 255, 204));
+
+        subirArchivo.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
         subirArchivo.setText("Archivo");
         subirArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -78,6 +70,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             }
         });
 
+        generarGrafico.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
         generarGrafico.setText("Generar Grafico");
         generarGrafico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,6 +78,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             }
         });
 
+        ejecutarCodigo.setBackground(new java.awt.Color(102, 255, 102));
+        ejecutarCodigo.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         ejecutarCodigo.setText("Play");
         ejecutarCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,12 +95,20 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         tokenArea.setRows(5);
         jScrollPane1.setViewportView(tokenArea);
 
+        reportesBoton.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
         reportesBoton.setText("Reportes");
         reportesBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reportesBotonActionPerformed(evt);
             }
         });
+
+        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
+        jLabel1.setText("Errores");
+
+        jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Analizador Lexico");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -115,50 +118,52 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(subirArchivo)
-                        .addGap(47, 47, 47)
+                        .addGap(48, 48, 48)
                         .addComponent(reportesBoton)
                         .addGap(48, 48, 48)
                         .addComponent(generarGrafico)
-                        .addContainerGap(255, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2)
-                                .addGap(18, 18, 18)
-                                .addComponent(ejecutarCodigo))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(15, 15, 15))))
+                        .addContainerGap(202, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ejecutarCodigo)
+                        .addGap(21, 21, 21))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(subirArchivo)
                     .addComponent(generarGrafico)
-                    .addComponent(reportesBoton))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(ejecutarCodigo))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                    .addComponent(reportesBoton)
+                    .addComponent(subirArchivo))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ejecutarCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,7 +216,9 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         tokenArea.setText("");
         
         for (Token token : tokens) {
-            tokenArea.append(token.obtenerToken()+ "\n");
+            if(token.getTipo().equals("Error")){
+                tokenArea.append(token.obtenerToken()+ "\n");
+            }
         }
     }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
@@ -224,42 +231,6 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null, "Aun no se han generado tokens");
         }
-        
-         /*String inputString = "hola"; // Tu string aquí
-
-            MutableGraph g = guru.nidi.graphviz.model.Factory.mutGraph("stringToNode")
-                    .setDirected(true)
-                    .graphAttrs().add(Rank.dir(Rank.RankDir.LEFT_TO_RIGHT));
-                    
-            MutableNode prevNode = null;
-            MutableNode lastNode = null;
-            for (char c : inputString.toCharArray()) {
-                MutableNode node = guru.nidi.graphviz.model.Factory.mutNode(Character.toString(c))
-                        .add(Label.of(Character.toString(c)));
-                g.add(node);
-                if (prevNode != null) {
-                    prevNode.addLink(node);
-                }
-                prevNode = node;
-                lastNode = node;
-            }
-            
-            // Cambiar el shape del último nodo ("y") a círculo doble
-            if (lastNode != null) {
-                lastNode.add(Shape.DOUBLE_CIRCLE);
-            }
-        try {
-             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             
-            Graphviz.fromGraph(g).height(60).render(Format.PNG).toOutputStream(outputStream);
-            
-            byte[] imageBytes = outputStream.toByteArray();
-                ImageIcon imageIcon = new ImageIcon(imageBytes);
-                
-            imagenGrafico.setIcon(imageIcon);
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }//GEN-LAST:event_generarGraficoActionPerformed
 
     private void reportesBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesBotonActionPerformed
@@ -311,6 +282,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private javax.swing.JTextArea codigoArea;
     private javax.swing.JButton ejecutarCodigo;
     private javax.swing.JButton generarGrafico;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
