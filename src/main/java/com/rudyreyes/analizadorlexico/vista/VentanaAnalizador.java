@@ -4,8 +4,8 @@
  */
 package com.rudyreyes.analizadorlexico.vista;
 
-import com.rudyreyes.analizadorlexico.analizador.AnalizadorLexico;
-import com.rudyreyes.analizadorlexico.token.Token;
+import com.rudyreyes.analizadorlexico.controlador.analizador.AnalizadorLexico;
+import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import com.rudyreyes.analizadorlexico.vista.util.NumeroDeLinea;
 import java.awt.Color;
 import java.io.File;

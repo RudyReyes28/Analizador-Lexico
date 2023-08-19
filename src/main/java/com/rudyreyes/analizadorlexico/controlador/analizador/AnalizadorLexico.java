@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.analizadorlexico.analizador;
+package com.rudyreyes.analizadorlexico.controlador.analizador;
 
-import com.rudyreyes.analizadorlexico.gramatica.Comentarios;
-import com.rudyreyes.analizadorlexico.gramatica.Constantes;
-import com.rudyreyes.analizadorlexico.gramatica.Identificadores;
-import com.rudyreyes.analizadorlexico.gramatica.OperadoresAritmeticos;
-import com.rudyreyes.analizadorlexico.gramatica.OperadoresAsignacion;
-import com.rudyreyes.analizadorlexico.gramatica.OperadoresComparacion;
-import com.rudyreyes.analizadorlexico.gramatica.OperadoresLogicos;
-import com.rudyreyes.analizadorlexico.gramatica.OtrosSimbolos;
-import com.rudyreyes.analizadorlexico.gramatica.PalabrasClave;
-import com.rudyreyes.analizadorlexico.token.Token;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.Comentarios;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.Constantes;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.Identificadores;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAritmeticos;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAsignacion;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresComparacion;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresLogicos;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.OtrosSimbolos;
+import com.rudyreyes.analizadorlexico.modelo.gramatica.PalabrasClave;
+import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
 

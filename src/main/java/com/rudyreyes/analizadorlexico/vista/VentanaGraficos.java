@@ -4,7 +4,7 @@
  */
 package com.rudyreyes.analizadorlexico.vista;
 
-import com.rudyreyes.analizadorlexico.token.Token;
+import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import guru.nidi.graphviz.attribute.Arrow;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;

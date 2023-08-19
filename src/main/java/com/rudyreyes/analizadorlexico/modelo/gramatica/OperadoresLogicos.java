@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.analizadorlexico.gramatica;
+package com.rudyreyes.analizadorlexico.modelo.gramatica;
 
 import java.util.HashSet;
 
@@ -10,19 +10,21 @@ import java.util.HashSet;
  *
  * @author rudyo
  */
-public class Identificadores {
+public class OperadoresLogicos {
     
-    private final String nombreToken = "Identificador";
+    private final String nombreToken = "OperadorLogico";
     
-    // Crear un conjunto para almacenar los comentarios
-    HashSet<String> identificadores = new HashSet<>();
+    // Crear un conjunto para almacenar los operadores logicos
+    HashSet<String> operadoresLogicos = new HashSet<>();
 
-    public Identificadores() {
-        identificadores.add("_");
+    public OperadoresLogicos() {
+        operadoresLogicos.add("and");
+        operadoresLogicos.add("or");
+        operadoresLogicos.add("not");
     }
     
     public boolean verificandoPalabra(String palabra){
-        if(identificadores.contains(palabra)){
+        if(operadoresLogicos.contains(palabra)){
             return true;
         }else{
             return false;
@@ -32,5 +34,6 @@ public class Identificadores {
     public String getNombreToken() {
         return nombreToken;
     }
+    
     
 }

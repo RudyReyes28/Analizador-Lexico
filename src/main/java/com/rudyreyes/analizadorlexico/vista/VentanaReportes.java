@@ -4,7 +4,7 @@
  */
 package com.rudyreyes.analizadorlexico.vista;
 
-import com.rudyreyes.analizadorlexico.token.Token;
+import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
