@@ -6,13 +6,25 @@ package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.analizador.AnalizadorLexico;
 import com.rudyreyes.analizadorlexico.token.Token;
+import com.rudyreyes.analizadorlexico.vista.util.NumeroDeLinea;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Element;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -23,14 +35,15 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     /**
      * Creates new form VentanaAnalizador
      */
-    private NumeroLinea numeroLinea;
+    private NumeroDeLinea numeroLinea;
     private List<Token> tokens;
 
     public VentanaAnalizador() {
         initComponents();
 
-        numeroLinea = new NumeroLinea(codigoArea);
-        jScrollPane2.setRowHeaderView(numeroLinea);
+        numeroLinea = new NumeroDeLinea(codigoTextPane);
+        
+        scrollTextPane.setRowHeaderView(numeroLinea);
         
         this.setLocationRelativeTo(null);
     }
@@ -48,13 +61,13 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         subirArchivo = new javax.swing.JButton();
         generarGrafico = new javax.swing.JButton();
         ejecutarCodigo = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        codigoArea = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         tokenArea = new javax.swing.JTextArea();
         reportesBoton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        scrollTextPane = new javax.swing.JScrollPane();
+        codigoTextPane = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Analilzador Lexico");
@@ -87,10 +100,6 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             }
         });
 
-        codigoArea.setColumns(20);
-        codigoArea.setRows(5);
-        jScrollPane2.setViewportView(codigoArea);
-
         tokenArea.setColumns(20);
         tokenArea.setRows(5);
         jScrollPane1.setViewportView(tokenArea);
@@ -110,53 +119,55 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Analizador Lexico");
 
+        scrollTextPane.setViewportView(codigoTextPane);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addComponent(subirArchivo)
                         .addGap(48, 48, 48)
                         .addComponent(reportesBoton)
                         .addGap(48, 48, 48)
-                        .addComponent(generarGrafico)
-                        .addContainerGap(202, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ejecutarCodigo)
-                        .addGap(21, 21, 21))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(generarGrafico))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(scrollTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ejecutarCodigo))
+                            .addComponent(jLabel1))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(generarGrafico)
+                .addGap(7, 7, 7)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(subirArchivo)
                     .addComponent(reportesBoton)
-                    .addComponent(subirArchivo))
+                    .addComponent(generarGrafico))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ejecutarCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ejecutarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -200,7 +211,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                     cadena = cadena + (char) valor;
                     valor = fr.read();
                 }
-                codigoArea.setText(cadena);
+                codigoTextPane.setText(cadena);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -209,9 +220,12 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }//GEN-LAST:event_subirArchivoActionPerformed
 
     private void ejecutarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCodigoActionPerformed
-        String codigoFuente = codigoArea.getText();
+        //String codigoFuente = codigoArea.getText();
+        String codigoFuente = codigoTextPane.getText();
         AnalizadorLexico analisis = new AnalizadorLexico();
         tokens =analisis.analizador(codigoFuente);
+        
+        resaltarTexto();
         
         tokenArea.setText("");
         
@@ -222,6 +236,92 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
+    private void resaltarTexto(){
+       
+        StyledDocument doc = codigoTextPane.getStyledDocument();
+        SimpleAttributeSet blackStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(blackStyle, Color.BLACK);
+
+        SimpleAttributeSet celesteStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(celesteStyle, new Color(0, 191, 255));
+        
+        SimpleAttributeSet moradoStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(moradoStyle, new Color(128, 0, 128));
+        
+        SimpleAttributeSet rojoStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(rojoStyle, Color.red);
+        
+        SimpleAttributeSet comentarioStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(comentarioStyle, Color.GRAY);
+        
+        SimpleAttributeSet otrosStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(otrosStyle, Color.green);
+
+        SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(defaultStyle, Color.BLACK);
+
+        for (int i = 0; i < doc.getDefaultRootElement().getElementCount(); i++) {
+            Element element = doc.getDefaultRootElement().getElement(i);
+            int start = element.getStartOffset();
+            int end = element.getEndOffset();
+            String text = null;
+
+            try {
+                text = doc.getText(start, end - start);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+            
+
+            if (text != null) {
+                for (Token token : tokens) {
+                    String lexema = token.getValor();
+                    String tipo = token.getTipo();
+                    int tokenStart = text.indexOf(lexema);
+                    int tokenEnd = tokenStart + lexema.length();
+                    
+                    if (text.startsWith("#") && token.getTipo().equals("Comentario")) {
+                        
+                            tokenStart = 0;
+                            tokenEnd = tokenStart + lexema.length();
+                            
+                        }
+
+                    if (tokenStart >= 0) {
+                        AttributeSet style = null;
+
+                        if (tipo.equals("Identificador")) {
+                            style = blackStyle;
+                        } else if (tipo.equals("OperadorAsignacion") || tipo.equals("OperadorLogico")
+                                || tipo.equals("OperadorComparacion") || tipo.equals("OperadorAritmetico")) {
+                            style = celesteStyle;
+                        } else if (tipo.equals("PalabraClave")) {
+                            style = moradoStyle;
+
+                        } else if (tipo.equals("Constante")) {
+                            style = rojoStyle;
+
+                        } else if (tipo.equals("Comentario")) {
+                            style = comentarioStyle;
+                            
+
+                        } else if(tipo.equals("Otros")) {
+                            style = otrosStyle;
+                        }else{
+                            style = blackStyle;
+                        }
+
+                        doc.setCharacterAttributes(start + tokenStart, tokenEnd - tokenStart, style, true);
+                    }
+                }
+            }
+        }
+        
+
+    }
+    
+    
+    
     private void generarGraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarGraficoActionPerformed
        
         if(tokens != null && !tokens.isEmpty() ){
@@ -279,15 +379,15 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea codigoArea;
+    private javax.swing.JTextPane codigoTextPane;
     private javax.swing.JButton ejecutarCodigo;
     private javax.swing.JButton generarGrafico;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton reportesBoton;
+    private javax.swing.JScrollPane scrollTextPane;
     private javax.swing.JButton subirArchivo;
     private javax.swing.JTextArea tokenArea;
     // End of variables declaration//GEN-END:variables

@@ -202,6 +202,8 @@ public class AnalizadorLexico {
             // Actualizar la posición del carácter
             if (caracter != '\n') {
                 columna++;
+            }else{
+                columna = 1;
             }
             
         }
@@ -285,11 +287,29 @@ public class AnalizadorLexico {
          if (Character.isDigit(caracter) || caracter == '.') {
              lexema.append(caracter);
          } else {
-             tokens.add(new Token(constantes.getNombreToken(),"[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
-             lexema.setLength(0); // Reiniciar el lexema
-             estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+             
+             if(verificandoPuntosDecimal()>=2){
+                 tokens.add(new Token("Error", lexema.toString(), linea, columna));
+                 lexema.setLength(0); // Reiniciar el lexema
+                 estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+             }else{
+                 tokens.add(new Token(constantes.getNombreToken(), "[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
+                 lexema.setLength(0); // Reiniciar el lexema
+                 estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+             }
+             
          }
      }
+     
+     private int verificandoPuntosDecimal(){
+         int contadorPuntos = 0;
+         for (char c : lexema.toString().toCharArray()) {
+             if (c == '.') {
+                 contadorPuntos++;
+             }
+         }
+        return contadorPuntos;
+    }
      
      private void leyendoCadenas(char caracter, int i){
          if (caracter == '"' || caracter == '\'') {

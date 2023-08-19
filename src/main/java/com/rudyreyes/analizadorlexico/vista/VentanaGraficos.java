@@ -5,6 +5,7 @@
 package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.token.Token;
+import guru.nidi.graphviz.attribute.Arrow;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.attribute.Shape;
@@ -207,18 +208,28 @@ public class VentanaGraficos extends javax.swing.JDialog {
 
             MutableNode prevNode = null;
             MutableNode lastNode = null;
-            for (char c : lexema.toCharArray()) {
+            
+
+            for (int i = 0; i < lexema.length(); i++) {
+                char c = lexema.charAt(i);
                 MutableNode node = guru.nidi.graphviz.model.Factory.mutNode(Character.toString(c))
                         .add(Label.of(Character.toString(c)));
                 g.add(node);
                 if (prevNode != null) {
                     prevNode.addLink(node);
+                }else if (i == 0) {
+                    // Agregar una flecha apuntando al primer nodo
+                    MutableNode firstArrow = guru.nidi.graphviz.model.Factory.mutNode("invisible")
+                            .add(Label.of(" "))
+                            .addLink(guru.nidi.graphviz.model.Factory.to(node));
+                    firstArrow.add(Shape.NONE);
+                    g.add(firstArrow);
                 }
+                
                 prevNode = node;
                 lastNode = node;
             }
 
-            // Cambiar el shape del último nodo ("y") a círculo doble
             if (lastNode != null) {
                 lastNode.add(Shape.DOUBLE_CIRCLE);
             }
@@ -242,9 +253,6 @@ public class VentanaGraficos extends javax.swing.JDialog {
                 llenarInformacionToken(lexema);
                 
                 imagenGrafico.setIcon(scaledImageIcon);
-                //ImageIcon imageIcon = new ImageIcon(imageBytes);
-
-                //imagenGrafico.setIcon(imageIcon);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
             }

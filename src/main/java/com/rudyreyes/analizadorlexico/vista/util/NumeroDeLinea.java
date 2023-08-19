@@ -1,20 +1,44 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.analizadorlexico.vista;
+package com.rudyreyes.analizadorlexico.vista.util;
 
-
-
-import java.awt.*;
-import java.beans.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.util.List;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.*;
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.Utilities;
 
-public class NumeroLinea extends JPanel
+/**
+ *
+ * @author rudyo
+ */
+    
+    public class NumeroDeLinea extends JPanel
         implements CaretListener, DocumentListener, PropertyChangeListener {
 
     public final static float LEFT = 0.0f;
@@ -41,12 +65,12 @@ public class NumeroLinea extends JPanel
     private HashMap<String, FontMetrics> fonts;
 
     
-    public NumeroLinea(JTextComponent component) {
+    public NumeroDeLinea(JTextComponent component) {
         this(component, 3);
     }
 
     
-    public NumeroLinea(JTextComponent component, int minimumDisplayDigits) {
+    public NumeroDeLinea(JTextComponent component, int minimumDisplayDigits) {
         this.component = component;
 
         setFont(component.getFont());
@@ -321,4 +345,5 @@ public class NumeroLinea extends JPanel
             }
         }
     }
+    
 }

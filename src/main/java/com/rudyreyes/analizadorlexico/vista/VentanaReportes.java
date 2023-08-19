@@ -27,11 +27,11 @@ public class VentanaReportes extends javax.swing.JDialog {
         for (Token token : tokens) {
             if (!token.getTipo().equals("Error")) {
                 model.addRow(new Object[]{
-                    colorearToken(token.getTipo(), token.getTipo()),
-                    colorearToken(token.getTipo(), token.getPatron()),
-                    colorearToken(token.getTipo(), token.getValor()),
-                    colorearToken(token.getTipo(), token.getLinea() + ""),
-                    colorearToken(token.getTipo(), token.getColumna() + "")
+                   token.getTipo(),
+                   token.getPatron(),
+                   token.getValor(),
+                   token.getLinea(),
+                   token.getColumna()
                 });
             }
         }
