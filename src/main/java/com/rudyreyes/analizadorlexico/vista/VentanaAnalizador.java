@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -222,10 +223,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void ejecutarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCodigoActionPerformed
         //String codigoFuente = codigoArea.getText();
         String codigoFuente = codigoTextPane.getText();
+        codigoFuente = codigoFuente + "\n";
         AnalizadorLexico analisis = new AnalizadorLexico();
         tokens =analisis.analizador(codigoFuente);
         
-        resaltarTexto();
+        resaltarTextoCodigo();
         
         tokenArea.setText("");
         
@@ -236,9 +238,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
-    private void resaltarTexto(){
-       
+    
+    private void resaltarTextoCodigo(){
         StyledDocument doc = codigoTextPane.getStyledDocument();
+        
         SimpleAttributeSet blackStyle = new SimpleAttributeSet();
         StyleConstants.setForeground(blackStyle, Color.BLACK);
 
@@ -259,66 +262,94 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
         SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
         StyleConstants.setForeground(defaultStyle, Color.BLACK);
-
+        
         for (int i = 0; i < doc.getDefaultRootElement().getElementCount(); i++) {
-            Element element = doc.getDefaultRootElement().getElement(i);
-            int start = element.getStartOffset();
-            int end = element.getEndOffset();
-            String text = null;
+            Element elemento = doc.getDefaultRootElement().getElement(i);
+            int inicioT = elemento.getStartOffset();
+            int finalT = elemento.getEndOffset();
+            String texto = null;
 
             try {
-                text = doc.getText(start, end - start);
+                texto = doc.getText(inicioT, finalT - inicioT);
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
             
-
-            if (text != null) {
-                for (Token token : tokens) {
-                    String lexema = token.getValor();
-                    String tipo = token.getTipo();
-                    int tokenStart = text.indexOf(lexema);
-                    int tokenEnd = tokenStart + lexema.length();
-                    
-                    if (text.startsWith("#") && token.getTipo().equals("Comentario")) {
+            if(texto != null  && !texto.trim().isEmpty()){
+                //OBTENER TOKENS DE LA LINEA EN LA QUE ESTAMOS
+                List<Token> lexemas = obteniendoLexemas(i+1);
+                
+                if(lexemas!= null){
+                    int tokenInicio = 0;
+                    int tokenFinal = 0;
+                    for(Token token: lexemas){
+                        String lexema = token.getValor();
+                        String tipo = token.getTipo();
                         
-                            tokenStart = 0;
-                            tokenEnd = tokenStart + lexema.length();
+                        
+                        if (texto.startsWith("#") && token.getTipo().equals("Comentario")) {
+                        
+                            tokenInicio = 0;
+                            tokenFinal = tokenInicio + lexema.length();
                             
-                        }
-
-                    if (tokenStart >= 0) {
-                        AttributeSet style = null;
-
-                        if (tipo.equals("Identificador")) {
-                            style = blackStyle;
-                        } else if (tipo.equals("OperadorAsignacion") || tipo.equals("OperadorLogico")
-                                || tipo.equals("OperadorComparacion") || tipo.equals("OperadorAritmetico")) {
-                            style = celesteStyle;
-                        } else if (tipo.equals("PalabraClave")) {
-                            style = moradoStyle;
-
-                        } else if (tipo.equals("Constante")) {
-                            style = rojoStyle;
-
-                        } else if (tipo.equals("Comentario")) {
-                            style = comentarioStyle;
+                        }else if(!texto.startsWith("#") && token.getTipo().equals("Comentario")){
                             
-
-                        } else if(tipo.equals("Otros")) {
-                            style = otrosStyle;
+                            tokenInicio = tokenFinal+1;
+                            System.out.println("Fila : "+ (i+1));
+                            System.out.println("Token inicio: "+ tokenInicio);
+                            tokenFinal = tokenInicio + lexema.length();
+                            System.out.println("Token Final: "+tokenFinal);
                         }else{
-                            style = blackStyle;
+                            tokenInicio = texto.indexOf(lexema, tokenFinal);
+                            tokenFinal = tokenInicio + lexema.length();
                         }
+                        
+                        if (tokenInicio >= 0) {
+                            AttributeSet style = null;
 
-                        doc.setCharacterAttributes(start + tokenStart, tokenEnd - tokenStart, style, true);
+                            if (tipo.equals("Identificador")) {
+                                style = blackStyle;
+                            } else if (tipo.equals("OperadorAsignacion") || tipo.equals("OperadorLogico")
+                                    || tipo.equals("OperadorComparacion") || tipo.equals("OperadorAritmetico")) {
+                                style = celesteStyle;
+                            } else if (tipo.equals("PalabraClave")) {
+                                style = moradoStyle;
+
+                            } else if (tipo.equals("Constante")) {
+                                style = rojoStyle;
+
+                            } else if (tipo.equals("Comentario")) {
+                                style = comentarioStyle;
+
+                            } else if (tipo.equals("Otros")) {
+                                style = otrosStyle;
+                            } else {
+                                style = blackStyle;
+                            }
+
+                            doc.setCharacterAttributes(inicioT + tokenInicio, tokenFinal - tokenInicio, style, true);
+                        }
+                        
                     }
                 }
             }
+            
+            
+        }
+    }
+    
+    private List<Token> obteniendoLexemas(int fila){
+        List<Token>  tokensLexema = new ArrayList<>();
+        
+        for(Token token: tokens){
+            if(token.getLinea() == fila){
+                tokensLexema.add(token);
+            }
         }
         
-
+        return tokensLexema;
     }
+    
     
     
     
