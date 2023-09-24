@@ -4,15 +4,15 @@
  */
 package com.rudyreyes.analizadorlexico.controlador.analizador.lexico;
 
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Comentarios;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Constantes;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Identificadores;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAritmeticos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAsignacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresComparacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresLogicos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OtrosSimbolos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.PalabrasClave;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Comentarios;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Constantes;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Identificadores;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAritmeticos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAsignacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresComparacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresLogicos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OtrosSimbolos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.PalabrasClave;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;

@@ -5,6 +5,7 @@
 package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.controlador.analizador.lexico.AnalizadorLexico;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.AnalizadorSintactico;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import com.rudyreyes.analizadorlexico.vista.util.NumeroDeLinea;
 import java.awt.Color;
@@ -235,6 +236,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             if(token.getTipo().equals("Error")){
                 tokenArea.append(token.obtenerToken()+ "\n");
             }
+        }
+        
+        if(tokens != null && !tokens.isEmpty() ){
+            AnalizadorSintactico.analizarSintaxis(tokens);
         }
     }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
