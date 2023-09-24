@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.analizadorlexico.controlador.analizador;
+package com.rudyreyes.analizadorlexico.controlador.analizador.lexico;
 
 import com.rudyreyes.analizadorlexico.modelo.gramatica.Comentarios;
 import com.rudyreyes.analizadorlexico.modelo.gramatica.Constantes;
