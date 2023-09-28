@@ -31,9 +31,6 @@ public class AsignacionVariables {
      */
     
     
-    
-    //private List<Token> tokens;
-    private int indice; // Índice actual en la lista de tokens
 
     final private int ESTADO_INICIAL = 0;
     final private int ESTADO_S0 = 1;
@@ -107,7 +104,7 @@ public class AsignacionVariables {
         }
         
         if(estadoActual == ESTADO_S3){
-            System.out.println("ASIGNACION VALIDA");
+            System.out.println("ASIGNACION VALIDA DE VARIABLES ");
         }else{
             System.out.println("NO ES UNA ASIGNACION DE VARIABLES");
         }

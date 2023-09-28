@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico;
 
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.AsignacionVariables;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.IfCondicional;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class AnalizadorSintactico {
         for (int fila = 1; fila <= filaMaxima; fila++) {
             List<Token> tokensFilaActual = new ArrayList<>();
 
-            // Obtén los tokens para la fila actual
+            // Obtener los tokens para la fila actual
             for (Token token : tokens) {
                 if (token.getLinea()== fila) {
                     tokensFilaActual.add(token);
@@ -27,8 +28,16 @@ public class AnalizadorSintactico {
 
             // Llama a tu método y pasa los tokens de la fila actual
             if(!tokensFilaActual.isEmpty()){
-                AsignacionVariables asignacionV = new AsignacionVariables();
-                asignacionV.analizarExpresion(tokensFilaActual);
+                if (tokensFilaActual.get(0).getTipo().equals("Identificador")) {
+                    AsignacionVariables asignacionV = new AsignacionVariables();
+                    asignacionV.analizarExpresion(tokensFilaActual);
+                
+                }else if(tokensFilaActual.get(0).getValor().equals("if") || tokensFilaActual.get(0).getValor().equals("elif") ){
+                    IfCondicional.analizarExpresion(tokensFilaActual);
+                
+                }else if(tokensFilaActual.get(0).getValor().equals("else")){
+                    IfCondicional.analizarExpresionElse(tokensFilaActual);
+                }
             }
         }
         

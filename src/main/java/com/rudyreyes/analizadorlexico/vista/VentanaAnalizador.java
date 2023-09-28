@@ -300,10 +300,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                         }else if(!texto.startsWith("#") && token.getTipo().equals("Comentario")){
                             
                             tokenInicio = tokenFinal+1;
-                            System.out.println("Fila : "+ (i+1));
-                            System.out.println("Token inicio: "+ tokenInicio);
                             tokenFinal = tokenInicio + lexema.length();
-                            System.out.println("Token Final: "+tokenFinal);
                         }else{
                             tokenInicio = texto.indexOf(lexema, tokenFinal);
                             tokenFinal = tokenInicio + lexema.length();
