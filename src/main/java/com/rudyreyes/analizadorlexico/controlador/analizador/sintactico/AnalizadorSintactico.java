@@ -2,7 +2,9 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico;
 
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.AsignacionVariables;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.CicloFor;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.IfCondicional;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.Metodos;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +30,48 @@ public class AnalizadorSintactico {
 
             // Llama a tu método y pasa los tokens de la fila actual
             if(!tokensFilaActual.isEmpty()){
-                if (tokensFilaActual.get(0).getTipo().equals("Identificador")) {
+                
+                //LLAMAR METODOS
+                if(tokensFilaActual.get(0).getTipo().equals("Identificador") && tokensFilaActual.get(1).getValor().equals("(")){
+                    Metodos.analizarLlamarMetodo(tokensFilaActual);
+                }
+                
+                //ASIGNACION DE VARIABLES
+                else if (tokensFilaActual.get(0).getTipo().equals("Identificador")) {
                     AsignacionVariables asignacionV = new AsignacionVariables();
                     asignacionV.analizarExpresion(tokensFilaActual);
                 
-                }else if(tokensFilaActual.get(0).getValor().equals("if") || tokensFilaActual.get(0).getValor().equals("elif") ){
+                
+                }
+                
+                //IF ELIF
+                else if(tokensFilaActual.get(0).getValor().equals("if") || tokensFilaActual.get(0).getValor().equals("elif") ){
                     IfCondicional.analizarExpresion(tokensFilaActual);
                 
-                }else if(tokensFilaActual.get(0).getValor().equals("else")){
+                
+                }
+                //ELSE 
+                else if(tokensFilaActual.get(0).getValor().equals("else")){
                     IfCondicional.analizarExpresionElse(tokensFilaActual);
+                
+                
+                }
+                //DECLARACION DE METODOS
+                else if(tokensFilaActual.get(0).getValor().equals("def")){
+                    Metodos.analizarDeclaracionMetodo(tokensFilaActual);
+                
+                }
+                
+                //METODO RANGE
+                else if(tokensFilaActual.get(0).getValor().equals("range")){
+                    Metodos.analizarMetodoRange(tokensFilaActual);
+                
+                }
+                
+                //CICLO FOR
+                else if(tokensFilaActual.get(0).getValor().equals("for")){
+                    CicloFor.analizarCicloFor(tokensFilaActual);
+                
                 }
             }
         }
