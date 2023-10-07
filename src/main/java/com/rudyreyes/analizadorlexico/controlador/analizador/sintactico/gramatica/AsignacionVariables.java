@@ -23,7 +23,7 @@ public class AsignacionVariables {
         constante | variable = x
         v= variable
         o = operadorAsignaicon
-        a = operadorAritmetico
+        a = operadorAritmetico / comparacion / logicos
         c = coma ,
 
         v [c v]* o x   [a  x]*  [c x (a x)*]* 
@@ -39,6 +39,7 @@ public class AsignacionVariables {
     final private int ESTADO_S3 = 4;
     final private int ESTADO_S4 = 5;
     final private int ESTADO_S5 = 6;
+    //final private int ESTADO_ERROR = 7;
 
     private int estadoActual = ESTADO_INICIAL;
 
@@ -82,8 +83,9 @@ public class AsignacionVariables {
                     if (tokens.get(i).getValor().equals(",")) {
                         estadoActual = ESTADO_S4;
                     
-                    } else if (tokens.get(i).getTipo().equals("OperadorAritmetico")) {
+                    } else if (verificarAritmetico(tokens.get(i))) {
                         estadoActual = ESTADO_S5;
+                    
                     }
                     break;
                 case ESTADO_S4:
@@ -114,6 +116,28 @@ public class AsignacionVariables {
     private boolean verificarX(Token token){
         return token.getTipo().equals("Constante") || token.getTipo().equals("Identificador");
     }
+    
+    private boolean verificarAritmetico(Token token){
+        
+        if(token.getTipo().equals("OperadorAritmetico")){
+            return true;
+        
+        } else if(token.getTipo().equals("OperadorComparacion")){
+            return true;
+        } else if(token.getTipo().equals("OperadorLogico")){
+            return true;
+        } else{
+            return false;
+        }
+        
+    }
+    
+    /*else if(!tokens.get(i).getTipo().equals("Comentario") ||
+                            !tokens.get(i).getValor().equals("(")
+                            || !tokens.get(i).getValor().equals(")")
+                            || !tokens.get(i).getTipo().equals("OperadorLogico")){
+                        estadoActual = ESTADO_ERROR;
+                    }*/
 
 }
 

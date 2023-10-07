@@ -1,10 +1,16 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico;
 
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.Arreglos;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.AsignacionVariables;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.CicloFor;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.Diccionarios;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.IfCondicional;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.Metodos;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.OperadorTernario;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.SentenciaIf;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.funcionPrint;
+import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.funcionReturn;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +37,30 @@ public class AnalizadorSintactico {
             // Llama a tu método y pasa los tokens de la fila actual
             if(!tokensFilaActual.isEmpty()){
                 
+                //LLAMAR PRINT
+                if(tokensFilaActual.get(0).getValor().equals("print")){
+                    funcionPrint.analizarPrint(tokensFilaActual);
+                }
+                
                 //LLAMAR METODOS
-                if(tokensFilaActual.get(0).getTipo().equals("Identificador") && tokensFilaActual.get(1).getValor().equals("(")){
+                else if(tokensFilaActual.get(0).getTipo().equals("Identificador") && tokensFilaActual.get(1).getValor().equals("(")){
                     Metodos.analizarLlamarMetodo(tokensFilaActual);
+                }
+                
+                //OPERADOR TERNARIO
+                else if(verificarOperadorTernario(tokensFilaActual)){
+                    OperadorTernario.analizarOperadorTernario(tokensFilaActual);
+                }
+                
+                //ASIGNACION DE ARREGLOS
+                else if(tokensFilaActual.get(0).getTipo().equals("Identificador") && buscarArreglo(tokensFilaActual)){
+                    Arreglos.analizarArreglo(tokensFilaActual);
+                }
+                
+                //ASIGNACION DE DICCIONARIOS
+                
+                else if(verificarDiccionario(tokensFilaActual)){
+                    Diccionarios.analizarDiccionario(tokensFilaActual);
                 }
                 
                 //ASIGNACION DE VARIABLES
@@ -44,16 +71,20 @@ public class AnalizadorSintactico {
                 
                 }
                 
+                //RETURN
+                else if(tokensFilaActual.get(0).getValor().equals("return")){
+                    funcionReturn.analizarReturn(tokensFilaActual);
+                
+                }
+                
                 //IF ELIF
                 else if(tokensFilaActual.get(0).getValor().equals("if") || tokensFilaActual.get(0).getValor().equals("elif") ){
-                    IfCondicional.analizarExpresion(tokensFilaActual);
-                
+                    SentenciaIf.analizarExpresion(tokensFilaActual);
                 
                 }
                 //ELSE 
                 else if(tokensFilaActual.get(0).getValor().equals("else")){
-                    IfCondicional.analizarExpresionElse(tokensFilaActual);
-                
+                    SentenciaIf.analizarExpresionElse(tokensFilaActual);
                 
                 }
                 //DECLARACION DE METODOS
@@ -73,6 +104,12 @@ public class AnalizadorSintactico {
                     CicloFor.analizarCicloFor(tokensFilaActual);
                 
                 }
+                
+                //CICLO WHILE
+                else if(tokensFilaActual.get(0).getValor().equals("while")){
+                    SentenciaIf.analizarExpresion(tokensFilaActual);
+                
+                }
             }
         }
         
@@ -89,6 +126,46 @@ public class AnalizadorSintactico {
         }
         
         return filaMaxima;
+    }
+    
+    private static boolean buscarArreglo(List<Token> tokens){
+        for (Token token : tokens) {
+            
+            if (token.getValor().equals("[")) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private static boolean verificarDiccionario(List<Token> tokens){
+        for (Token token : tokens) {
+            
+            if (token.getValor().equals("{")) {
+                if(tokens.get(0).getTipo().equals("Identificador") && tokens.get(1).getValor().equals("=") ){
+                    return true;
+                }
+            }
+        }
+        
+        
+        return false;
+    }
+    
+    private static boolean verificarOperadorTernario(List<Token> tokens){
+        for (Token token : tokens) {
+            
+            if (token.getValor().equals("if")) {
+                if(tokens.get(0).getTipo().equals("Identificador") && tokens.get(1).getValor().equals("=") ){
+                    return true;
+                }
+            }
+        }
+        
+        
+        return false;
+        
     }
     
 }

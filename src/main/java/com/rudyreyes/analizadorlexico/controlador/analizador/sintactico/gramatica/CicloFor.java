@@ -63,7 +63,7 @@ for variable in variable:
                     if (tokens.get(i).getTipo().equals("Identificador") && tokens.get(i+1).getValor().equals("(")) {
                         if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
                             estadoActual = ESTADO_S3;
-                            i = tokens.size()-2;
+                            i =  obtenerPosicionMetodos(i, tokens) -1;
                             
                         }
                     }
@@ -71,7 +71,7 @@ for variable in variable:
                     else if(tokens.get(i).getValor().equals("range")){
                         if(Metodos.analizarMetodoRange(obtenerMetodos(i, tokens))){
                             estadoActual = ESTADO_S3;
-                            i = tokens.size()-2;
+                            i =  obtenerPosicionMetodos(i, tokens) -1;
                             
                         }
                     }
@@ -116,11 +116,22 @@ for variable in variable:
     
     private static List<Token> obtenerMetodos(int i,List<Token> tokens ){
         List<Token> tokensMetodo = new ArrayList<>();
+        int posicion = obtenerPosicionMetodos(i, tokens);
         
-        for(int n = i; n < tokens.size()-1; n++ ){
+        for(int n = i; n < posicion; n++ ){
             tokensMetodo.add(tokens.get(n));
         }
         
         return tokensMetodo;
+    }
+    
+    private static int obtenerPosicionMetodos(int i, List<Token> tokens){
+        for(int n = i; n < tokens.size(); n++ ){
+            if (tokens.get(n).getValor().equals(":")){
+                return n;
+            }
+        }
+        
+        return tokens.size() -1;
     }
 }
