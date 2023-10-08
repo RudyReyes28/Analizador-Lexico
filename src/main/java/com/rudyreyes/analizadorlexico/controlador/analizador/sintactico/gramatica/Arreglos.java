@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,6 +65,13 @@ v =  [  ] | x   [c x ]* ]
                     if (tokens.get(i).getValor().equals("]")) {
                         estadoActual = ESTADO_S3;
                     
+                    }else if(isDiccionario(i, tokens)){
+                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens))){
+                            estadoActual = ESTADO_S4;
+                            i = obtenerPosicionDiccionario(i, tokens);
+                        }else{
+                            estadoActual = ESTADO_INICIAL;
+                        }
                     }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
                     }
@@ -88,7 +96,14 @@ v =  [  ] | x   [c x ]* ]
                     break;
                     
                 case ESTADO_S5:
-                    if(verificarX(tokens.get(i))){
+                    if(isDiccionario(i, tokens)){
+                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens))){
+                            estadoActual = ESTADO_S4;
+                            i = obtenerPosicionDiccionario(i, tokens);
+                        }else{
+                            estadoActual = ESTADO_INICIAL;
+                        }
+                    }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
                     }
                     break;
@@ -111,5 +126,32 @@ v =  [  ] | x   [c x ]* ]
     
     private static boolean verificarX(Token token){
         return token.getTipo().equals("Constante") || token.getTipo().equals("Identificador");
+    }
+    
+    
+    private static List<Token> obtenerDiccionario(int i,List<Token> tokens ){
+        List<Token> tokensDic = new ArrayList<>();
+        int posicion = obtenerPosicionDiccionario(i, tokens);
+        
+        for(int n = i; n <= posicion; n++ ){
+            tokensDic.add(tokens.get(n));
+        }
+        
+        return tokensDic;
+    }
+    
+    private static int obtenerPosicionDiccionario(int i, List<Token> tokens){
+        for(int n = i; n < tokens.size(); n++ ){
+            if (tokens.get(n).getValor().equals("}")){
+                return n;
+            }
+        }
+        
+        return tokens.size() -1;
+    }
+    
+    private static boolean isDiccionario(int i, List<Token> tokens){
+        
+        return tokens.get(i).getValor().equals("{");
     }
 }
