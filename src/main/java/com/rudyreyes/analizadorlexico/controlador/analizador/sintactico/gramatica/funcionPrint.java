@@ -55,7 +55,7 @@ print ( x   [a  x]*  [c x (a x)*]* )
 
                 case ESTADO_S1:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -81,7 +81,7 @@ print ( x   [a  x]*  [c x (a x)*]* )
                 
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -93,7 +93,7 @@ print ( x   [a  x]*  [c x (a x)*]* )
                     break;
                 case ESTADO_S4:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             

@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,13 @@ v =  [  ] | x   [c x ]* ]
     final static private int ESTADO_S3 = 4;
     final static private int ESTADO_S4 = 5;
     final static private int ESTADO_S5 = 6;
+    final static private int ESTADO_ERROR = 7;
     
-    public static void analizarArreglo(List<Token> tokens) {
+    public static EstructuraSintactica analizarArreglo(List<Token> tokens) {
         int estadoActual = ESTADO_INICIAL;
+        
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Arreglo");
         int i = 0;
         while (i < tokens.size()) {
 
@@ -51,6 +56,9 @@ v =  [  ] | x   [c x ]* ]
                     if (tokens.get(i).getValor().equals("=")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '=', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -58,6 +66,9 @@ v =  [  ] | x   [c x ]* ]
                     if (tokens.get(i).getValor().equals("[")) {
                         estadoActual = ESTADO_S2;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '[', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -66,14 +77,19 @@ v =  [  ] | x   [c x ]* ]
                         estadoActual = ESTADO_S3;
                     
                     }else if(isDiccionario(i, tokens)){
-                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens))){
+                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S4;
                             i = obtenerPosicionDiccionario(i, tokens);
                         }else{
-                            estadoActual = ESTADO_INICIAL;
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una diccionario, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante o ']', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 
@@ -82,7 +98,9 @@ v =  [  ] | x   [c x ]* ]
                         estadoActual = ESTADO_S3;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
                 case ESTADO_S4:
@@ -92,19 +110,27 @@ v =  [  ] | x   [c x ]* ]
                     }else if (tokens.get(i).getValor().equals("]")) {
                         estadoActual = ESTADO_S3;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ',' o ']', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                     
                 case ESTADO_S5:
                     if(isDiccionario(i, tokens)){
-                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens))){
+                        if(Diccionarios.analizarDiccionario(obtenerDiccionario(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S4;
                             i = obtenerPosicionDiccionario(i, tokens);
                         }else{
-                            estadoActual = ESTADO_INICIAL;
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una diccionario, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -115,11 +141,16 @@ v =  [  ] | x   [c x ]* ]
             i++;
         }
         if(estadoActual == ESTADO_S3){
-            
-            System.out.println("ARREGLO VALIDO");
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("ARREGLO INVALIDO");
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba ']' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
         
     }
     

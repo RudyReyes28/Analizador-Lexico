@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Metodos {
     final static private int ESTADO_S5 = 6;
     final static private int ESTADO_S6 = 7;
     final static private int ESTADO_S7 = 8;
+    final static private int ESTADO_ERROR = 9;
     
     
      /*
@@ -35,8 +37,11 @@ c = coma
 def v ( [ ) |  v [c v]*  )  ] : 
 
     */
-    public static void analizarDeclaracionMetodo(List<Token> tokens) {
+    public static EstructuraSintactica analizarDeclaracionMetodo(List<Token> tokens) {
         int estadoActual = ESTADO_INICIAL;
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Declaracion Metodo");
+        
         for (int i = 0; i < tokens.size(); i++) {
 
             switch (estadoActual) {
@@ -52,12 +57,18 @@ def v ( [ ) |  v [c v]*  )  ] :
                     if (tokens.get(i).getTipo().equals("Identificador")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
                 case ESTADO_S1:
                     if (tokens.get(i).getValor().equals("(")) {
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '(', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -67,6 +78,9 @@ def v ( [ ) |  v [c v]*  )  ] :
                     
                     }else if(tokens.get(i).getValor().equals(")")){
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                         
                     break;
@@ -77,16 +91,26 @@ def v ( [ ) |  v [c v]*  )  ] :
                     
                     } else if (tokens.get(i).getValor().equals(")")) {
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ',' o ')', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
+                    
                 case ESTADO_S4:
                     if(tokens.get(i).getValor().equals(":")){
                         estadoActual = ESTADO_S6;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ':', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S5:
                     if(tokens.get(i).getTipo().equals("Identificador")){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -95,7 +119,9 @@ def v ( [ ) |  v [c v]*  )  ] :
                         estadoActual = ESTADO_S6;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
                 default:
@@ -105,10 +131,17 @@ def v ( [ ) |  v [c v]*  )  ] :
         }
         
         if(estadoActual == ESTADO_S6){
-            System.out.println("DECLARACION DE METODOS VALIDA ");
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("NO ES UNA DECLARACION DE METODOS");
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba ':' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
 
     }
     
@@ -129,8 +162,12 @@ c = coma ,
 v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
 */
     
-    public static boolean analizarLlamarMetodo(List<Token> tokens) {
+    public static EstructuraSintactica analizarLlamarMetodo(List<Token> tokens) {
         int estadoActual = ESTADO_INICIAL;
+        
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Llamar Metodo");
+        
         for (int i = 0; i < tokens.size(); i++) {
 
             switch (estadoActual) {
@@ -145,6 +182,9 @@ v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
                     if (tokens.get(i).getValor().equals("(")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '(', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -154,6 +194,9 @@ v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
                     
                     }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable/constante o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -162,7 +205,9 @@ v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
                         estadoActual = ESTADO_S2;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
                 case ESTADO_S3:
@@ -176,16 +221,26 @@ v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
                     }else if(tokens.get(i).getValor().equals(")")) {
                         estadoActual = ESTADO_S2;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba un operador aritmetico o ',' o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S4:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
                     }
+                    else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    }
                     break;
                 case ESTADO_S5:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -196,12 +251,17 @@ v ( [ ) | { x   [a  x]*  [c x (a x)*]*  ) } ]
         }
         
         if(estadoActual == ESTADO_S2){
-            System.out.println("LLAMADO DE METODO VALIDO");
-            return true;
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("LLAMADO DE METODO INVALIDO");
-            return false;
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba ')' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
 
     }
     
@@ -212,7 +272,11 @@ range(min, max, step)
 x = variable | constante
 range ( x | x , x | x , x , x ) 
 */
-    public static boolean analizarMetodoRange(List<Token> tokens){
+    public static EstructuraSintactica analizarMetodoRange(List<Token> tokens){
+        
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Llamar Metodo");
+        
         int estadoActual = ESTADO_INICIAL;
         for (int i = 0; i < tokens.size(); i++) {
 
@@ -228,12 +292,18 @@ range ( x | x , x | x , x , x )
                     if (tokens.get(i).getValor().equals("(")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '(', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
                 case ESTADO_S1:
                      if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -244,11 +314,17 @@ range ( x | x , x | x , x , x )
                     }else if(tokens.get(i).getValor().equals(")")) {
                         estadoActual = ESTADO_S4;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ',' o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S3:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S5;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S4:
@@ -256,7 +332,9 @@ range ( x | x , x | x , x , x )
                         estadoActual = ESTADO_S4;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
                 case ESTADO_S5:
@@ -266,12 +344,18 @@ range ( x | x , x | x , x , x )
                     }else if(tokens.get(i).getValor().equals(")")) {
                         estadoActual = ESTADO_S4;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ',' o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                     
                 case ESTADO_S6:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S7;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                     
@@ -280,6 +364,9 @@ range ( x | x , x | x , x , x )
                     if(tokens.get(i).getValor().equals(")")) {
                         estadoActual = ESTADO_S4;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba  ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -290,12 +377,17 @@ range ( x | x , x | x , x , x )
         }
         
         if(estadoActual == ESTADO_S4){
-            System.out.println("LLAMADO DE METODO RANGE VALIDO");
-            return true;
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("LLAMADO DE METODO RANGE INVALIDO");
-            return false;
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba ')' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
     }
     
     private static boolean verificarX(Token token){

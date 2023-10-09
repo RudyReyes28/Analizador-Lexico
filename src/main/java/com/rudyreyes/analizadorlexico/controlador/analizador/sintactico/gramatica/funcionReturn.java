@@ -38,7 +38,7 @@ c = condicional
                 case ESTADO_S0:
                     
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S1;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -61,7 +61,7 @@ c = condicional
 
                 case ESTADO_S2:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S1;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -74,7 +74,7 @@ c = condicional
                 
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S1;
                             i =  obtenerPosicionMetodos(i, tokens);
                             

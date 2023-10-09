@@ -46,7 +46,7 @@ public class AnalizadorSintactico {
                 
                 //LLAMAR METODOS
                 else if(tokensFilaActual.get(0).getTipo().equals("Identificador") && tokensFilaActual.get(1).getValor().equals("(")){
-                    Metodos.analizarLlamarMetodo(tokensFilaActual);
+                    estructuraSintactica.add(Metodos.analizarLlamarMetodo(tokensFilaActual));
                 }
                 
                 //OPERADOR TERNARIO
@@ -56,13 +56,13 @@ public class AnalizadorSintactico {
                 
                 //ASIGNACION DE ARREGLOS
                 else if(tokensFilaActual.get(0).getTipo().equals("Identificador") && buscarArreglo(tokensFilaActual)){
-                    Arreglos.analizarArreglo(tokensFilaActual);
+                    estructuraSintactica.add(Arreglos.analizarArreglo(tokensFilaActual));
                 }
                 
                 //ASIGNACION DE DICCIONARIOS
                 
                 else if(verificarDiccionario(tokensFilaActual)){
-                    Diccionarios.analizarDiccionario(tokensFilaActual);
+                    estructuraSintactica.add(Diccionarios.analizarDiccionario(tokensFilaActual));
                 }
                 
                 //ASIGNACION DE VARIABLES
@@ -90,13 +90,13 @@ public class AnalizadorSintactico {
                 }
                 //DECLARACION DE METODOS
                 else if(tokensFilaActual.get(0).getValor().equals("def")){
-                    Metodos.analizarDeclaracionMetodo(tokensFilaActual);
+                    estructuraSintactica.add(Metodos.analizarDeclaracionMetodo(tokensFilaActual));
                 
                 }
                 
                 //METODO RANGE
                 else if(tokensFilaActual.get(0).getValor().equals("range")){
-                    Metodos.analizarMetodoRange(tokensFilaActual);
+                    estructuraSintactica.add(Metodos.analizarMetodoRange(tokensFilaActual));
                 
                 }
                 

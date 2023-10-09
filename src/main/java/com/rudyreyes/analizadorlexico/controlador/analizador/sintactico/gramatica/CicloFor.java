@@ -70,7 +70,7 @@ for variable in variable:
                 case ESTADO_S2:
                     //AQUI TENGO QUE VER SI LO QUE VIENE ES UNA VARIABLE O UN METODO, O RANGE
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             
@@ -82,7 +82,7 @@ for variable in variable:
                     }
                     
                     else if(tokens.get(i).getValor().equals("range")){
-                        if(Metodos.analizarMetodoRange(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarMetodoRange(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             

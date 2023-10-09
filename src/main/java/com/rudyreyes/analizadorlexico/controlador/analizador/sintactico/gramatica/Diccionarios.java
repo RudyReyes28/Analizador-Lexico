@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.List;
 
@@ -38,8 +39,11 @@ c = coma ,
     final static private int ESTADO_S5 = 6;
     final static private int ESTADO_S6 = 7;
     final static private int ESTADO_S7 = 8;
+    final static private int ESTADO_ERROR = 9;
     
-    public static boolean analizarDiccionario(List<Token> tokens) {
+    public static EstructuraSintactica analizarDiccionario(List<Token> tokens) {
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Diccionario");
         int estadoActual = ESTADO_INICIAL;
         int i = 0;
         while (i < tokens.size()) {
@@ -57,6 +61,9 @@ c = coma ,
                     
                     }else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable/constante o '}', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -65,22 +72,31 @@ c = coma ,
                         estadoActual = ESTADO_S1;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
 
                 case ESTADO_S2:
-                     if(tokens.get(i).getValor().equals(":")){
+                    if(tokens.get(i).getValor().equals(":")){
                         estadoActual = ESTADO_S3;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ':', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 
                 case ESTADO_S3:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
+                    
                 case ESTADO_S4:
                     if(tokens.get(i).getValor().equals("}")){
                         estadoActual = ESTADO_S1;
@@ -88,23 +104,36 @@ c = coma ,
                     }else if (tokens.get(i).getValor().equals(",")) {
                         estadoActual = ESTADO_S5;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ',' o '}', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                     
                 case ESTADO_S5:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S6;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
+                    
                 case ESTADO_S6:
                     if(tokens.get(i).getValor().equals(":")){
                         estadoActual = ESTADO_S7;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba ':', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S7:
                     if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S4;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -115,13 +144,16 @@ c = coma ,
             i++;
         }
         if(estadoActual == ESTADO_S1){
-            
-            System.out.println("DICCIONARIO VALIDO");
-            return true;
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("DICCIONARIO INVALIDO");
-            return false;
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba '}' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
         
     }
     

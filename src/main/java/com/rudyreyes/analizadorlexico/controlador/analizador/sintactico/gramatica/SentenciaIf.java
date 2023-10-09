@@ -63,7 +63,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                 case ESTADO_S0:
                     
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S1;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -99,7 +99,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
 
                 case ESTADO_S2:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S5;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -119,7 +119,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S6;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -182,7 +182,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S7:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S6;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -202,7 +202,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S8:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S9;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -236,7 +236,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S10:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S9;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -282,7 +282,7 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S13:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S12;
                             i =  obtenerPosicionMetodos(i, tokens);
                             

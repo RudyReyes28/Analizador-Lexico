@@ -86,7 +86,7 @@ public class AsignacionVariables {
 
                 case ESTADO_S2:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -121,7 +121,7 @@ public class AsignacionVariables {
                     break;
                 case ESTADO_S4:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
@@ -140,7 +140,7 @@ public class AsignacionVariables {
                     break;
                 case ESTADO_S5:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
+                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
