@@ -11,6 +11,7 @@ import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatic
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.SentenciaIf;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.funcionPrint;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica.funcionReturn;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AnalizadorSintactico {
     
     public static void analizarSintaxis (List<Token> tokens ){
+        List<EstructuraSintactica> estructuraSintactica = new ArrayList<>();
         int filaMaxima = filaMaxima(tokens);
 
         for (int fila = 1; fila <= filaMaxima; fila++) {
@@ -65,9 +67,8 @@ public class AnalizadorSintactico {
                 
                 //ASIGNACION DE VARIABLES
                 else if (tokensFilaActual.get(0).getTipo().equals("Identificador")) {
-                    AsignacionVariables asignacionV = new AsignacionVariables();
-                    asignacionV.analizarExpresion(tokensFilaActual);
-                
+                    
+                    estructuraSintactica.add(AsignacionVariables.analizarExpresion(tokensFilaActual));
                 
                 }
                 
@@ -79,12 +80,12 @@ public class AnalizadorSintactico {
                 
                 //IF ELIF
                 else if(tokensFilaActual.get(0).getValor().equals("if") || tokensFilaActual.get(0).getValor().equals("elif") ){
-                    SentenciaIf.analizarExpresion(tokensFilaActual);
+                    estructuraSintactica.add(SentenciaIf.analizarExpresion(tokensFilaActual));
                 
                 }
                 //ELSE 
                 else if(tokensFilaActual.get(0).getValor().equals("else")){
-                    SentenciaIf.analizarExpresionElse(tokensFilaActual);
+                    estructuraSintactica.add(SentenciaIf.analizarExpresionElse(tokensFilaActual));
                 
                 }
                 //DECLARACION DE METODOS
@@ -101,15 +102,21 @@ public class AnalizadorSintactico {
                 
                 //CICLO FOR
                 else if(tokensFilaActual.get(0).getValor().equals("for")){
-                    CicloFor.analizarCicloFor(tokensFilaActual);
+                    estructuraSintactica.add(CicloFor.analizarCicloFor(tokensFilaActual));
                 
                 }
                 
                 //CICLO WHILE
                 else if(tokensFilaActual.get(0).getValor().equals("while")){
-                    SentenciaIf.analizarExpresion(tokensFilaActual);
+                    estructuraSintactica.add(SentenciaIf.analizarExpresion(tokensFilaActual));
                 
                 }
+            }
+        }
+        
+        for(EstructuraSintactica estructura: estructuraSintactica){
+            if(!estructura.isEstructuraValida()){
+                System.out.println(estructura.getError());
             }
         }
         

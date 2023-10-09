@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,20 +34,23 @@ public class AsignacionVariables {
     
     
 
-    final private int ESTADO_INICIAL = 0;
-    final private int ESTADO_S0 = 1;
-    final private int ESTADO_S1 = 2;
-    final private int ESTADO_S2 = 3;
-    final private int ESTADO_S3 = 4;
-    final private int ESTADO_S4 = 5;
-    final private int ESTADO_S5 = 6;
-    //final private int ESTADO_ERROR = 7;
-
-    private int estadoActual = ESTADO_INICIAL;
+    final static private int ESTADO_INICIAL = 0;
+    final static private int ESTADO_S0 = 1;
+    final static private int ESTADO_S1 = 2;
+    final static private int ESTADO_S2 = 3;
+    final static private int ESTADO_S3 = 4;
+    final static private int ESTADO_S4 = 5;
+    final static private int ESTADO_S5 = 6;
+    final static private int ESTADO_ERROR = 7;
 
     
 
-    public void analizarExpresion(List<Token> tokens) {
+    
+
+    public static EstructuraSintactica analizarExpresion(List<Token> tokens) {
+        int estadoActual = ESTADO_INICIAL;
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Asignacion de variables");
 
         for (int i = 0; i < tokens.size(); i++) {
 
@@ -65,12 +69,18 @@ public class AsignacionVariables {
                     
                     } else if (tokens.get(i).getTipo().equals("OperadorAsignacion")) {
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una ',' o un operador de asignacion, Linea: "+ tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
                 case ESTADO_S1:
                     if (tokens.get(i).getTipo().equals("Identificador")) {
                         estadoActual = ESTADO_S0;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -81,11 +91,16 @@ public class AsignacionVariables {
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
-                            estadoActual = ESTADO_INICIAL;
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S3:
@@ -93,8 +108,14 @@ public class AsignacionVariables {
                     if (tokens.get(i).getValor().equals(",")) {
                         estadoActual = ESTADO_S4;
                     
-                    } else if (verificarAritmetico(tokens.get(i))) {
+                    }else if (verificarAritmetico(tokens.get(i))) {
                         estadoActual = ESTADO_S5;
+                    
+                    }else if(tokens.get(i).getTipo().equals("Comentario")){
+                        estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una ',' o un operador aritmetico, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     
                     }
                     break;
@@ -105,11 +126,16 @@ public class AsignacionVariables {
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
-                            estadoActual = ESTADO_INICIAL;
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S5:
@@ -119,11 +145,16 @@ public class AsignacionVariables {
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
-                            estadoActual = ESTADO_INICIAL;
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + "Columna"+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -134,18 +165,25 @@ public class AsignacionVariables {
         }
         
         if(estadoActual == ESTADO_S3){
-            System.out.println("ASIGNACION VALIDA DE VARIABLES ");
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("NO ES UNA ASIGNACION DE VARIABLES");
+            estructura.setError("Error de Sintaxis, estructura incompleta se espera algo al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
 
     }
     
-    private boolean verificarX(Token token){
+    private static boolean verificarX(Token token){
         return token.getTipo().equals("Constante") || token.getTipo().equals("Identificador");
     }
     
-    private boolean verificarAritmetico(Token token){
+    private static boolean verificarAritmetico(Token token){
         
         if(token.getTipo().equals("OperadorAritmetico")){
             return true;
@@ -191,12 +229,6 @@ public class AsignacionVariables {
         return false;
     }
     
-    /*else if(!tokens.get(i).getTipo().equals("Comentario") ||
-                            !tokens.get(i).getValor().equals("(")
-                            || !tokens.get(i).getValor().equals(")")
-                            || !tokens.get(i).getTipo().equals("OperadorLogico")){
-                        estadoActual = ESTADO_ERROR;
-                    }*/
 
 }
 

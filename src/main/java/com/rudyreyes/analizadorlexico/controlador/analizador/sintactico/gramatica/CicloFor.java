@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,7 @@ public class CicloFor {
     final static private int ESTADO_S2 = 3;
     final static private int ESTADO_S3 = 4;
     final static private int ESTADO_S4 = 5;
-    final static private int ESTADO_S5 = 6;
-    final static private int ESTADO_S6 = 7;
-    final static private int ESTADO_S7 = 8;
+    final static private int ESTADO_ERROR = 6;
     
     /*
     for x in range:
@@ -32,8 +31,12 @@ for n in range(2, 10):
 for variable in variable:
 */
     
-    public static void analizarCicloFor(List<Token> tokens) {
+    public static EstructuraSintactica analizarCicloFor(List<Token> tokens) {
         int estadoActual = ESTADO_INICIAL;
+        
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("Ciclo for");
+        
         int i = 0;
         while (i < tokens.size()) {
 
@@ -48,6 +51,9 @@ for variable in variable:
                     if (tokens.get(i).getTipo().equals("Identificador")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -55,16 +61,23 @@ for variable in variable:
                     if (tokens.get(i).getValor().equals("in")) {
                         estadoActual = ESTADO_S2;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba 'in', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
                 case ESTADO_S2:
                     //AQUI TENGO QUE VER SI LO QUE VIENE ES UNA VARIABLE O UN METODO, O RANGE
-                    if (tokens.get(i).getTipo().equals("Identificador") && tokens.get(i+1).getValor().equals("(")) {
+                    if (isMetodo(i, tokens)) {
                         if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens))){
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     
@@ -73,11 +86,18 @@ for variable in variable:
                             estadoActual = ESTADO_S3;
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     
                     else if(tokens.get(i).getTipo().equals("Identificador")){
                         estadoActual = ESTADO_S3;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 
@@ -85,6 +105,9 @@ for variable in variable:
                     if (tokens.get(i).getValor().equals(":")) {
                         estadoActual = ESTADO_S4;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba un ':', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S4:
@@ -92,7 +115,8 @@ for variable in variable:
                         estadoActual = ESTADO_S4;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -103,14 +127,15 @@ for variable in variable:
             i++;
         }
         if(estadoActual == ESTADO_S4){
-            
-            System.out.println("CICLO FOR VALIDO");
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("CICLO FOR INVALIDO");
+            estructura.setError("Error de Sintaxis, estructura incompleta se espera una variable/constante o ':' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
-        
          
-
+        return estructura;
     }
     
     
@@ -133,5 +158,15 @@ for variable in variable:
         }
         
         return tokens.size() -1;
+    }
+    
+    private static boolean isMetodo(int i, List<Token> tokens){
+        
+        if(i+1 < tokens.size()){
+            if(tokens.get(i).getTipo().equals("Identificador") && tokens.get(i+1).getValor().equals("(")){
+                return true;
+            }
+        }
+        return false;
     }
 }
