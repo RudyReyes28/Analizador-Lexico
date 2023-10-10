@@ -6,6 +6,7 @@ package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.controlador.analizador.lexico.AnalizadorLexico;
 import com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.AnalizadorSintactico;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import com.rudyreyes.analizadorlexico.vista.util.NumeroDeLinea;
 import java.awt.Color;
@@ -39,6 +40,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
      */
     private NumeroDeLinea numeroLinea;
     private List<Token> tokens;
+    private List<EstructuraSintactica> sintaxis;
 
     public VentanaAnalizador() {
         initComponents();
@@ -70,6 +72,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         scrollTextPane = new javax.swing.JScrollPane();
         codigoTextPane = new javax.swing.JTextPane();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        erroresSintacticos = new javax.swing.JTextArea();
+        reportesSintacticos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Analilzador Lexico");
@@ -107,15 +113,15 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tokenArea);
 
         reportesBoton.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
-        reportesBoton.setText("Reportes");
+        reportesBoton.setText("Reportes Lexicos");
         reportesBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reportesBotonActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
-        jLabel1.setText("Errores");
+        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel1.setText("Errores Lexicos");
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -123,34 +129,53 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
         scrollTextPane.setViewportView(codigoTextPane);
 
+        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel3.setText("Errores Sintacticos");
+
+        erroresSintacticos.setColumns(20);
+        erroresSintacticos.setRows(5);
+        jScrollPane2.setViewportView(erroresSintacticos);
+
+        reportesSintacticos.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
+        reportesSintacticos.setText("Reportes Sintacticos");
+        reportesSintacticos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportesSintacticosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
                         .addComponent(subirArchivo)
                         .addGap(48, 48, 48)
                         .addComponent(reportesBoton)
-                        .addGap(48, 48, 48)
-                        .addComponent(generarGrafico))
+                        .addGap(36, 36, 36)
+                        .addComponent(generarGrafico)
+                        .addGap(39, 39, 39)
+                        .addComponent(reportesSintacticos)
+                        .addGap(0, 118, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollTextPane)
+                        .addGap(18, 18, 18)
+                        .addComponent(ejecutarCodigo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(45, 45, 45)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(scrollTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ejecutarCodigo))
-                            .addComponent(jLabel1))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2))))
+                .addGap(14, 14, 14))
+            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,16 +185,23 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(subirArchivo)
-                    .addComponent(reportesBoton)
-                    .addComponent(generarGrafico))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(reportesBoton)
+                        .addComponent(generarGrafico)
+                        .addComponent(reportesSintacticos)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ejecutarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scrollTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
-                .addGap(6, 6, 6)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,7 +212,9 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -228,19 +262,26 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         AnalizadorLexico analisis = new AnalizadorLexico();
         tokens =analisis.analizador(codigoFuente);
         
+        if(tokens != null && !tokens.isEmpty() ){
+            sintaxis = AnalizadorSintactico.analizarSintaxis(tokens);
+        }
+        
+        
         resaltarTextoCodigo();
         
         tokenArea.setText("");
-        
+        erroresSintacticos.setText("");
         for (Token token : tokens) {
             if(token.getTipo().equals("Error")){
                 tokenArea.append(token.obtenerToken()+ "\n");
             }
         }
-        
-        if(tokens != null && !tokens.isEmpty() ){
-            AnalizadorSintactico.analizarSintaxis(tokens);
+        for(EstructuraSintactica estructura: sintaxis){
+            if(!estructura.isEstructuraValida()){
+                erroresSintacticos.append(estructura.getError()+ "\n");
+            }
         }
+        
     }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
     
@@ -376,6 +417,17 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_reportesBotonActionPerformed
 
+    private void reportesSintacticosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesSintacticosActionPerformed
+        if(sintaxis != null && !sintaxis.isEmpty() ){
+            VentanaReportesSintactico ventanaReportesSintacticos = new VentanaReportesSintactico(sintaxis);
+            ventanaReportesSintacticos.setLocationRelativeTo(null);
+            ventanaReportesSintacticos.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+            ventanaReportesSintacticos.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Aun no se han generado tokens");
+        }
+    }//GEN-LAST:event_reportesSintacticosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -414,12 +466,16 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane codigoTextPane;
     private javax.swing.JButton ejecutarCodigo;
+    private javax.swing.JTextArea erroresSintacticos;
     private javax.swing.JButton generarGrafico;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton reportesBoton;
+    private javax.swing.JButton reportesSintacticos;
     private javax.swing.JScrollPane scrollTextPane;
     private javax.swing.JButton subirArchivo;
     private javax.swing.JTextArea tokenArea;

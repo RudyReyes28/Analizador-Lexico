@@ -29,7 +29,7 @@ c = condicional
         int estadoActual = ESTADO_INICIAL;
         
         EstructuraSintactica estructura = new EstructuraSintactica();
-        estructura.setNombreEstructura("print");
+        estructura.setNombreEstructura("return");
         
         int i = 0;
         while (i < tokens.size()) {

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class AnalizadorSintactico {
     
-    public static void analizarSintaxis (List<Token> tokens ){
+    public static List<EstructuraSintactica> analizarSintaxis (List<Token> tokens ){
         List<EstructuraSintactica> estructuraSintactica = new ArrayList<>();
         int filaMaxima = filaMaxima(tokens);
 
@@ -114,12 +114,8 @@ public class AnalizadorSintactico {
             }
         }
         
-        for(EstructuraSintactica estructura: estructuraSintactica){
-            if(!estructura.isEstructuraValida()){
-                System.out.println(estructura.getError());
-            }
-        }
         
+        return estructuraSintactica;
     }
     
     
