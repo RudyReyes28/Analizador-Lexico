@@ -41,7 +41,7 @@ public class AnalizadorSintactico {
                 
                 //LLAMAR PRINT
                 if(tokensFilaActual.get(0).getValor().equals("print")){
-                    funcionPrint.analizarPrint(tokensFilaActual);
+                    estructuraSintactica.add(funcionPrint.analizarPrint(tokensFilaActual));
                 }
                 
                 //LLAMAR METODOS
@@ -51,7 +51,7 @@ public class AnalizadorSintactico {
                 
                 //OPERADOR TERNARIO
                 else if(verificarOperadorTernario(tokensFilaActual)){
-                    OperadorTernario.analizarOperadorTernario(tokensFilaActual);
+                    estructuraSintactica.add(OperadorTernario.analizarOperadorTernario(tokensFilaActual));
                 }
                 
                 //ASIGNACION DE ARREGLOS
@@ -74,7 +74,7 @@ public class AnalizadorSintactico {
                 
                 //RETURN
                 else if(tokensFilaActual.get(0).getValor().equals("return")){
-                    funcionReturn.analizarReturn(tokensFilaActual);
+                    estructuraSintactica.add(funcionReturn.analizarReturn(tokensFilaActual));
                 
                 }
                 
@@ -163,7 +163,7 @@ public class AnalizadorSintactico {
     private static boolean verificarOperadorTernario(List<Token> tokens){
         for (Token token : tokens) {
             
-            if (token.getValor().equals("if")) {
+            if (token.getValor().equals("if") || token.getValor().equals("else")) {
                 if(tokens.get(0).getTipo().equals("Identificador") && tokens.get(1).getValor().equals("=") ){
                     return true;
                 }

@@ -1,6 +1,7 @@
 
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,13 @@ print ( x   [a  x]*  [c x (a x)*]* )
     final static private int ESTADO_S3 = 4;
     final static private int ESTADO_S4 = 5;
     final static private int ESTADO_S5 = 6;
+    final static private int ESTADO_ERROR = 7;
     
-    public static void analizarPrint(List<Token> tokens) {
+    public static EstructuraSintactica analizarPrint(List<Token> tokens) {
         int estadoActual = ESTADO_INICIAL;
+        
+        EstructuraSintactica estructura = new EstructuraSintactica();
+        estructura.setNombreEstructura("print");
         int i = 0;
         while (i < tokens.size()) {
 
@@ -50,6 +55,9 @@ print ( x   [a  x]*  [c x (a x)*]* )
                     if (tokens.get(i).getValor().equals("(")) {
                         estadoActual = ESTADO_S1;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba '(', Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -59,10 +67,18 @@ print ( x   [a  x]*  [c x (a x)*]* )
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S2;
+                    
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
 
@@ -76,6 +92,9 @@ print ( x   [a  x]*  [c x (a x)*]* )
                     }else if(tokens.get(i).getValor().equals(")")){
                         estadoActual = ESTADO_S5;
                     
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba un operador aritmetico o ',' o ')' , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 
@@ -85,10 +104,17 @@ print ( x   [a  x]*  [c x (a x)*]* )
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                 case ESTADO_S4:
@@ -97,10 +123,17 @@ print ( x   [a  x]*  [c x (a x)*]* )
                             estadoActual = ESTADO_S2;
                             i =  obtenerPosicionMetodos(i, tokens);
                             
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                         }
                     }
                     else if(verificarX(tokens.get(i))){
                         estadoActual = ESTADO_S2;
+                    }else{
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, se esperaba una variable o constante  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
                     }
                     break;
                     
@@ -109,7 +142,9 @@ print ( x   [a  x]*  [c x (a x)*]* )
                         estadoActual = ESTADO_S5;
                     
                     }else{
-                        estadoActual = ESTADO_INICIAL;
+                        estadoActual = ESTADO_ERROR;
+                        estructura.setError("Error de Sintaxis, no se esperaba "+ tokens.get(i).getValor()+", " + "Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
                     }
                     break;
                 default:
@@ -119,11 +154,17 @@ print ( x   [a  x]*  [c x (a x)*]* )
             i++;
         }
         if(estadoActual == ESTADO_S5){
-            
-            System.out.println("PRINT VALIDO");
+            estructura.setEstructuraValida(true);
+        }else if(estadoActual == ESTADO_ERROR){
+            estructura.setEstructuraValida(false);
         }else{
-            System.out.println("PRINT INVALIDO");
+            estructura.setError("Error de Sintaxis, estructura incompleta se esperaba ')' al final de la linea "+tokens.get(0).getLinea());
+            estructura.setEstructuraValida(false);
         }
+        
+        estructura.setTokensEstructura(tokens);
+        
+        return estructura;
         
     }
     
