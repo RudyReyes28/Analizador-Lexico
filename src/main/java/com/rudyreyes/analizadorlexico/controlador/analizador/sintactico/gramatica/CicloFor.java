@@ -134,7 +134,8 @@ for variable in variable:
             estructura.setError("Error de Sintaxis, estructura incompleta se espera una variable/constante o ':' al final de la linea "+tokens.get(0).getLinea());
             estructura.setEstructuraValida(false);
         }
-         
+        
+        estructura.setTokensEstructura(tokens);
         return estructura;
     }
     
