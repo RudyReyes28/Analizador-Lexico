@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
 import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.MetodoLlamado;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +64,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                 case ESTADO_S0:
                     
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S1;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -99,8 +103,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
 
                 case ESTADO_S2:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S5;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -119,8 +126,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S6;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -182,8 +192,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S7:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S6;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -202,8 +215,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S8:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S9;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -236,8 +252,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S10:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S9;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -255,7 +274,20 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     break;
                     
                 case ESTADO_S11:
-                    if(verificarN(tokens.get(i))){
+                    if (isMetodo(i, tokens)) {
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
+                            estadoActual = ESTADO_S12;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
+                            i =  obtenerPosicionMetodos(i, tokens);
+                            
+                        }else{
+                            estadoActual = ESTADO_ERROR;
+                            estructura.setError("Error de Sintaxis, se esperaba una metodo, Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
+                    
+                        }
+                    }else if(verificarN(tokens.get(i))){
                         estadoActual = ESTADO_S12;
                     }else{
                         estadoActual = ESTADO_ERROR;
@@ -282,8 +314,11 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
                     
                 case ESTADO_S13:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es =Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S12;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{

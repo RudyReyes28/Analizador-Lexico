@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
 import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.MetodoLlamado;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +71,11 @@ for variable in variable:
                 case ESTADO_S2:
                     //AQUI TENGO QUE VER SI LO QUE VIENE ES UNA VARIABLE O UN METODO, O RANGE
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S3;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             
                         }else{
@@ -82,8 +86,11 @@ for variable in variable:
                     }
                     
                     else if(tokens.get(i).getValor().equals("range")){
-                        if(Metodos.analizarMetodoRange(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarMetodoRange(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S3;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens) -1;
                             
                         }else{

@@ -106,7 +106,10 @@ public class LlenarTablaDeSimbolos {
             operador++;
         }
         
-        for(int i = operador+1; i < tokens.size()-1; i++){
+        for(int i = operador+1; i < tokens.size(); i++){
+            if(tokens.get(i).getValor().equals("]") || tokens.get(i).getValor().equals("}")){
+                break;
+            }
             valor += tokens.get(i).getValor()+" ";
         }
         

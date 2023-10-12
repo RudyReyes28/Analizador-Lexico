@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
 import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.MetodoLlamado;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +45,11 @@ c = condicional
                 case ESTADO_S0:
                     
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S1;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -69,6 +73,9 @@ c = condicional
                     }else if(tokens.get(i).getTipo().equals("OperadorComparacion")){
                         estadoActual = ESTADO_S3;
                     
+                    }else if(tokens.get(i).getTipo().equals("Comentario")){
+                        estadoActual = ESTADO_S1;
+                    
                     }else{
                         estadoActual = ESTADO_ERROR;
                         estructura.setError("Error de Sintaxis, se esperaba un operador aritmetico o de comparacion  , Linea: "+tokens.get(i).getLinea() + " Columna: "+tokens.get(i).getColumna());
@@ -77,8 +84,11 @@ c = condicional
 
                 case ESTADO_S2:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S1;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -97,8 +107,11 @@ c = condicional
                 
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S1;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{

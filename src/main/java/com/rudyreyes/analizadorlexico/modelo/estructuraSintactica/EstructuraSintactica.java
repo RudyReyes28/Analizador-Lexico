@@ -19,10 +19,14 @@ tipoError:
     
     private String nombreEstructura;
     private List<Token> tokensEstructura;
+    private List<MetodoLlamado> metodosLlamados;
     private boolean estructuraValida;
+    private boolean hayMetodo;
     private String error;
 
     public EstructuraSintactica() {
+        metodosLlamados = new ArrayList<>();
+        hayMetodo = false;
     }
 
     public EstructuraSintactica(String nombreEstructura, List<Token> tokensEstructura, boolean estructuraValida, String error) {
@@ -44,6 +48,16 @@ tipoError:
         return tokensEstructura;
     }
 
+    public List<MetodoLlamado> getMetodosLlamados() {
+        return metodosLlamados;
+    }
+
+    public boolean isHayMetodo() {
+        return hayMetodo;
+    }
+    
+    
+
     public void setTokensEstructura(List<Token> tokensEstructura) {
         this.tokensEstructura = tokensEstructura;
     }
@@ -62,6 +76,18 @@ tipoError:
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public void setMetodosLlamados(List<MetodoLlamado> metodosLlamados) {
+        this.metodosLlamados = metodosLlamados;
+    }
+    
+    public void setMetodosLlamados(MetodoLlamado metodo){
+        this.metodosLlamados.add(metodo);
+    }
+
+    public void setHayMetodo(boolean hayMetodo) {
+        this.hayMetodo = hayMetodo;
     }
     
     

@@ -2,6 +2,7 @@
 package com.rudyreyes.analizadorlexico.controlador.analizador.sintactico.gramatica;
 
 import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.MetodoLlamado;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +64,11 @@ print ( x   [a  x]*  [c x (a x)*]* )
 
                 case ESTADO_S1:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S2;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -100,8 +104,11 @@ print ( x   [a  x]*  [c x (a x)*]* )
                 
                 case ESTADO_S3:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S2;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{
@@ -119,8 +126,11 @@ print ( x   [a  x]*  [c x (a x)*]* )
                     break;
                 case ESTADO_S4:
                     if (isMetodo(i, tokens)) {
-                        if(Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens)).isEstructuraValida()){
+                        EstructuraSintactica es = Metodos.analizarLlamarMetodo(obtenerMetodos(i, tokens));
+                        if(es.isEstructuraValida()){
                             estadoActual = ESTADO_S2;
+                            estructura.setMetodosLlamados(new MetodoLlamado(es.getTokensEstructura()));
+                            estructura.setHayMetodo(true);
                             i =  obtenerPosicionMetodos(i, tokens);
                             
                         }else{

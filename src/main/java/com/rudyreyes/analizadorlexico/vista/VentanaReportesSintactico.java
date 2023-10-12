@@ -56,7 +56,7 @@ public class VentanaReportesSintactico extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         verTablaBloque = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        reporteMetodos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Reportes Sintacticos");
@@ -94,7 +94,12 @@ public class VentanaReportesSintactico extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         jLabel4.setText("Reportes de Metodos o Funciones");
 
-        jButton1.setText("Ver Reportes");
+        reporteMetodos.setText("Ver Reportes");
+        reporteMetodos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteMetodosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -123,7 +128,7 @@ public class VentanaReportesSintactico extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(65, 65, 65)
-                                .addComponent(jButton1)))
+                                .addComponent(reporteMetodos)))
                         .addGap(21, 21, 21))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -143,7 +148,7 @@ public class VentanaReportesSintactico extends javax.swing.JFrame {
                         .addGap(47, 47, 47)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)))
+                        .addComponent(reporteMetodos)))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -212,18 +217,24 @@ public class VentanaReportesSintactico extends javax.swing.JFrame {
         
     }//GEN-LAST:event_verTablaBloqueActionPerformed
 
+    private void reporteMetodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteMetodosActionPerformed
+        VentanaReportesMetodos ventanaM = new VentanaReportesMetodos(this, true, sintaxis);
+        ventanaM.setLocationRelativeTo(this);
+        ventanaM.setVisible(true);
+    }//GEN-LAST:event_reporteMetodosActionPerformed
+
     /**
      * @param args the command line arguments
      */
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton reporteMetodos;
     private javax.swing.JScrollPane scrollReportes;
     private javax.swing.JTable tablaReportes;
     private javax.swing.JButton verTablaBloque;
