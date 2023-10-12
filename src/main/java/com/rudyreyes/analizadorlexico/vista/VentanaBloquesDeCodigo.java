@@ -5,8 +5,12 @@
 package com.rudyreyes.analizadorlexico.vista;
 
 import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.BloqueSintactico;
+import com.rudyreyes.analizadorlexico.modelo.estructuraSintactica.EstructuraSintactica;
+import com.rudyreyes.analizadorlexico.modelo.token.Token;
+import com.rudyreyes.analizadorlexico.vista.util.LlenarTablaDeSimbolos;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -33,6 +37,7 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         }
         
         listaBloque.setModel(listModel);
+        
     }
 
     /**
@@ -52,6 +57,9 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaReportes = new javax.swing.JTable();
         nombreBloque = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        instruccionBloque = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Simbolos Por Bloques");
@@ -62,6 +70,11 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Tabla de Simbolos Por Bloque de Codigo");
 
+        listaBloque.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listaBloqueValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(listaBloque);
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
@@ -80,6 +93,13 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         nombreBloque.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         nombreBloque.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        instruccionBloque.setColumns(20);
+        instruccionBloque.setRows(5);
+        jScrollPane3.setViewportView(instruccionBloque);
+
+        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel3.setText("Lista de Instrucciones");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -89,15 +109,19 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(47, 47, 47)
                         .addComponent(nombreBloque, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(27, 27, 27))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(73, 73, 73))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,11 +131,13 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(nombreBloque))
+                    .addComponent(nombreBloque)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addGap(46, 46, 46))
         );
 
@@ -119,7 +145,9 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,17 +157,54 @@ public class VentanaBloquesDeCodigo extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void listaBloqueValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaBloqueValueChanged
+        String elementoSeleccionado = listaBloque.getSelectedValue();
+        if (elementoSeleccionado != null) {
+            BloqueSintactico bloqueSeleccionado = null;
+
+            for (BloqueSintactico bloque : bloques) {
+                if (bloque.getNombreBloque().equals(elementoSeleccionado)) {
+                    bloqueSeleccionado = bloque;
+                    break;
+                }
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tablaReportes.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+            nombreBloque.setText(bloqueSeleccionado.getSintaxis().get(0).getNombreEstructura());
+            
+            if(bloqueSeleccionado != null){
+                LlenarTablaDeSimbolos.llenarTablaSimbolos(bloqueSeleccionado.getSintaxis(), model);
+            }
+            
+            instruccionBloque.setText("");
+            
+            for(EstructuraSintactica es: bloqueSeleccionado.getSintaxis()){
+                String estructura = "";
+                for(Token tk: es.getTokensEstructura()){
+                    estructura += tk.getValor()+" ";
+                }
+                instruccionBloque.append(estructura+"\n");
+            }
+        }
+    }//GEN-LAST:event_listaBloqueValueChanged
+
     /**
      * @param args the command line arguments
      */
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea instruccionBloque;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> listaBloque;
     private javax.swing.JLabel nombreBloque;
     private javax.swing.JTable tablaReportes;
