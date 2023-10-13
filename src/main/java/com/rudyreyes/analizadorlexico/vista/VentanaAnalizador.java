@@ -224,8 +224,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         //Creamos el objeto JFileChooser
         JFileChooser fc = new JFileChooser();
 
-//Creamos el filtro
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
+//Creamos el filtro//Archivos de texto (*.txt, *.py)", "txt", "py"
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de texto (*.txt, *.py)", "txt", "py");
 
 //Le indicamos el filtro
         fc.setFileFilter(filtro);

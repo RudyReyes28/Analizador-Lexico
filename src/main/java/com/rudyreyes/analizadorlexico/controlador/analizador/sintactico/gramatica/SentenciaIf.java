@@ -435,10 +435,8 @@ if n [a n]* | n [a n]* c n [a n]* [ L n [a n]* c n [a n]* ] * :
         }
         
         if(estadoActual == ESTADO_S1){
-            System.out.println("DECLARACION VALIDA PARA EL ELSE");
             estructura.setEstructuraValida(true);
         }else{
-            System.out.println("NO ES UNA DECLARACION IF");
             estructura.setEstructuraValida(false);
         }
         estructura.setTokensEstructura(tokens);
