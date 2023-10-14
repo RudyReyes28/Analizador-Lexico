@@ -4,15 +4,15 @@
  */
 package com.rudyreyes.analizadorlexico.controlador.analizador.lexico;
 
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Comentarios;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Constantes;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Identificadores;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAritmeticos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAsignacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresComparacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresLogicos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OtrosSimbolos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.PalabrasClave;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Comentarios;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Constantes;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Identificadores;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAritmeticos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAsignacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresComparacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresLogicos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OtrosSimbolos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.PalabrasClave;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class AnalizadorLexico {
      public List<Token> analizador(String codigoFuente) {
          
 
-        // Recorrer el código fuente caracter por caracter
+        // Recorrer el cÃ³digo fuente caracter por caracter
         for (int i = 0; i < codigoFuente.length(); i++) {
             char caracter = codigoFuente.charAt(i);
             switch (estadoActual) {
@@ -66,7 +66,8 @@ public class AnalizadorLexico {
                     if (Character.isLetter(caracter) || caracter == '_') {
                         // Comenzar a leer un identificador
                         lexema.append(caracter);
-                        if(Character.isLetter(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1) == '_'){
+                        if(Character.isLetterOrDigit(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1) == '_'){
+
                             estadoActual = ESTADO_LEYENDO_IDENTIFICADOR;
                         }else{
                             tokens.add(new Token(identificador.getNombreToken(), "[a-zA-Z_][a-zA-Z0-9_]*", lexema.toString(), linea, columna));
@@ -75,7 +76,7 @@ public class AnalizadorLexico {
                         }
                         
                     } else if (caracter == '\n') {
-                        // Nueva línea, actualizar posición
+                        // Nueva lÃ­nea, actualizar posiciÃ³n
                         linea++;
                         columna = 1;
                     
@@ -141,7 +142,7 @@ public class AnalizadorLexico {
                         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
                         
                     }else if (!Character.isWhitespace(caracter)) {
-                        // Caracter inválido, generar error o ignorar
+                        // Caracter invÃ¡lido, generar error o ignorar
                         lexema.append(caracter);
                         if(Character.isWhitespace(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1)== '\n'){
                             tokens.add(new Token("Error",lexema.toString(), linea, columna));
@@ -180,7 +181,7 @@ public class AnalizadorLexico {
                     break;
                     
                 case ESTADO_NUMEROS:
-                    leyendoNumeros(caracter, i);
+                    leyendoNumeros(caracter, i, codigoFuente);
                   
                     break; 
                     
@@ -194,12 +195,12 @@ public class AnalizadorLexico {
                     leyendoErrores(caracter, i);
                     break;
                 default:
-                    // Estado inválido, generar error o manejar de acuerdo a tus necesidades
+                    // Estado invÃ¡lido, generar error o manejar de acuerdo a tus necesidades
             }
             
             
 
-            // Actualizar la posición del carácter
+            // Actualizar la posiciÃ³n del carÃ¡cter
             if (caracter != '\n') {
                 columna++;
             }else{
@@ -208,7 +209,7 @@ public class AnalizadorLexico {
             
         }
 
-        // Comprobar si hay un identificador sin finalizar al final del código fuente
+        // Comprobar si hay un identificador sin finalizar al final del cÃ³digo fuente
         if (estadoActual == ESTADO_LEYENDO_IDENTIFICADOR) {
             tokens.add(new Token(identificador.getNombreToken(), lexema.toString(), linea, columna));
         }
@@ -283,21 +284,20 @@ public class AnalizadorLexico {
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
      
-     private void leyendoNumeros(char caracter, int i){
+     private void leyendoNumeros(char caracter, int i, String codigoFuente){
          if (Character.isDigit(caracter) || caracter == '.') {
              lexema.append(caracter);
-         } else {
-             
-             if(verificandoPuntosDecimal()>=2){
-                 tokens.add(new Token("Error", lexema.toString(), linea, columna));
-                 lexema.setLength(0); // Reiniciar el lexema
-                 estadoActual = ESTADO_INICIAL; // Volver al estado inicial
-             }else{
-                 tokens.add(new Token(constantes.getNombreToken(), "[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
-                 lexema.setLength(0); // Reiniciar el lexema
-                 estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+             if (!Character.isDigit(codigoFuente.charAt(i + 1)) && codigoFuente.charAt(i + 1) != '.') {
+                 if (verificandoPuntosDecimal() >= 2) {
+                     tokens.add(new Token("Error", lexema.toString(), linea, columna));
+                     lexema.setLength(0); // Reiniciar el lexema
+                     estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                 } else {
+                     tokens.add(new Token(constantes.getNombreToken(), "[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
+                     lexema.setLength(0); // Reiniciar el lexema
+                     estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                 }
              }
-             
          }
      }
      
