@@ -2,17 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.analizadorlexico.controlador.analizador;
+package com.rudyreyes.analizadorlexico.controlador.analizador.lexico;
 
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Comentarios;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Constantes;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.Identificadores;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAritmeticos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresAsignacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresComparacion;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OperadoresLogicos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.OtrosSimbolos;
-import com.rudyreyes.analizadorlexico.modelo.gramatica.PalabrasClave;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Comentarios;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Constantes;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.Identificadores;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAritmeticos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresAsignacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresComparacion;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OperadoresLogicos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.OtrosSimbolos;
+import com.rudyreyes.analizadorlexico.modelo.alfabeto.PalabrasClave;
 import com.rudyreyes.analizadorlexico.modelo.token.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class AnalizadorLexico {
                     if (Character.isLetter(caracter) || caracter == '_') {
                         // Comenzar a leer un identificador
                         lexema.append(caracter);
-                        if(Character.isLetter(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1) == '_'){
+                        if(Character.isLetterOrDigit(codigoFuente.charAt(i+1)) || codigoFuente.charAt(i+1) == '_'){
                             estadoActual = ESTADO_LEYENDO_IDENTIFICADOR;
                         }else{
                             tokens.add(new Token(identificador.getNombreToken(), "[a-zA-Z_][a-zA-Z0-9_]*", lexema.toString(), linea, columna));
@@ -180,7 +180,7 @@ public class AnalizadorLexico {
                     break;
                     
                 case ESTADO_NUMEROS:
-                    leyendoNumeros(caracter, i);
+                    leyendoNumeros(caracter, i, codigoFuente);
                   
                     break; 
                     
@@ -283,10 +283,21 @@ public class AnalizadorLexico {
         estadoActual = ESTADO_INICIAL; // Volver al estado inicial
     }
      
-     private void leyendoNumeros(char caracter, int i){
+     private void leyendoNumeros(char caracter, int i, String codigoFuente){
          if (Character.isDigit(caracter) || caracter == '.') {
              lexema.append(caracter);
-         } else {
+             if (!Character.isDigit(codigoFuente.charAt(i + 1)) && codigoFuente.charAt(i + 1) != '.') {
+                 if (verificandoPuntosDecimal() >= 2) {
+                     tokens.add(new Token("Error", lexema.toString(), linea, columna));
+                     lexema.setLength(0); // Reiniciar el lexema
+                     estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                 } else {
+                     tokens.add(new Token(constantes.getNombreToken(), "[0-9]*\\.?[0-9]*", lexema.toString(), linea, columna));
+                     lexema.setLength(0); // Reiniciar el lexema
+                     estadoActual = ESTADO_INICIAL; // Volver al estado inicial
+                 }
+             }
+         }/* else {
              
              if(verificandoPuntosDecimal()>=2){
                  tokens.add(new Token("Error", lexema.toString(), linea, columna));
@@ -298,7 +309,7 @@ public class AnalizadorLexico {
                  estadoActual = ESTADO_INICIAL; // Volver al estado inicial
              }
              
-         }
+         }*/
      }
      
      private int verificandoPuntosDecimal(){
