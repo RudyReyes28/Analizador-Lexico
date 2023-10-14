@@ -111,6 +111,15 @@ public class AnalizadorSintactico {
                     estructuraSintactica.add(SentenciaIf.analizarExpresion(tokensFilaActual));
                 
                 }
+                
+                //OTRAS ESTRUCTURAS break
+                else{
+                    EstructuraSintactica es = new EstructuraSintactica();
+                    es.setNombreEstructura("Otros");
+                    es.setEstructuraValida(true);
+                    es.setTokensEstructura(tokensFilaActual);
+                    estructuraSintactica.add(es);
+                }
             }
         }
         

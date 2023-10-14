@@ -56,6 +56,9 @@ public class LlenarTablaDeSimbolos {
                     case "return":
                         funcionReturn(es.getTokensEstructura(), model);
                         break;
+                    case "Otros":
+                        llenarTabla(es.getTokensEstructura().get(0).getValor(), es.getTokensEstructura().get(0).getValor(), "---", es.getTokensEstructura().get(0).getLinea(), es.getTokensEstructura().get(0).getColumna(), model);
+                        break;
                     default:
                         break;
                 }
