@@ -125,7 +125,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Analizador Lexico");
+        jLabel2.setText("Analizador Lexico-Sintactico");
 
         scrollTextPane.setViewportView(codigoTextPane);
 
@@ -170,9 +170,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                             .addComponent(jLabel1))
                         .addGap(45, 45, 45)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel3)
                             .addComponent(jScrollPane2))))
                 .addGap(14, 14, 14))
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

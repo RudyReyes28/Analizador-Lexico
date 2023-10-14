@@ -114,11 +114,13 @@ public class AnalizadorSintactico {
                 
                 //OTRAS ESTRUCTURAS break
                 else{
-                    EstructuraSintactica es = new EstructuraSintactica();
-                    es.setNombreEstructura("Otros");
-                    es.setEstructuraValida(true);
-                    es.setTokensEstructura(tokensFilaActual);
-                    estructuraSintactica.add(es);
+                    if (tokensFilaActual.get(0).getValor().equals("break")) {
+                        EstructuraSintactica es = new EstructuraSintactica();
+                        es.setNombreEstructura("Otros");
+                        es.setEstructuraValida(true);
+                        es.setTokensEstructura(tokensFilaActual);
+                        estructuraSintactica.add(es);
+                    }
                 }
             }
         }

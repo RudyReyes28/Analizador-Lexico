@@ -191,7 +191,7 @@
               <Font name="Comic Sans MS" size="24" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Analizador Lexico"/>
+            <Property name="text" type="java.lang.String" value="Analizador Lexico-Sintactico"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="scrollTextPane">
